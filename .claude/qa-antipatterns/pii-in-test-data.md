@@ -1,61 +1,63 @@
-# PII in Test Data
+# PII in Test Cases (Manual Test Cases)
+
+**Applies to:** `/testcases` (мануальные тест-кейсы в Kotlin DSL)
 
 ## Why this is bad
 
-Реальные персональные данные в тестах:
-- Нарушение GDPR/152-ФЗ при утечке репозитория
-- Случайная отправка на prod (copy-paste)
-- Юридические риски при аудите
-- Этические проблемы (данные реальных людей)
+Реальные персональные данные в мануальных тест-кейсах:
+- Документация попадает в Git → риск утечки PII
+- Тестировщики копируют данные из тест-кейсов на prod
+- Нарушение GDPR/152-ФЗ при аудите репозитория
+- "Тестовый аккаунт Васи" — это всё ещё PII
 
 ## Bad Example
 
 ```kotlin
-// ❌ BAD: Реальные данные (даже если "свои")
-object TestData {
-    val REAL_EMAIL = "john.smith@company.com"
-    val REAL_PHONE = "+79161234567"  // Чей-то реальный номер
-    val REAL_NAME = "Иван Петров"
+// ❌ BAD: Реальные данные в описании шагов
+testCase("Регистрация нового пользователя") {
+    step("Ввести данные") {
+        action = "Ввести email: ivan.petrov@gmail.com, телефон: +79161234567"
+        expected = "Данные приняты"
+    }
 }
 
 // ❌ BAD: Данные похожие на реальные
-val payload = RegisterRequest(
-    email = "ivan.petrov.1985@gmail.com",  // Выглядит как реальный
-    phone = "+79031112233",
-    fullName = "Петров Иван Сергеевич"
-)
+testCase("Проверка профиля") {
+    precondition("Залогиниться под Петров Иван Сергеевич, ИНН 123456789012")
+}
 ```
 
 ## Good Example
 
 ```kotlin
-// ✅ GOOD: Очевидно тестовые данные
-object TestData {
-    fun email() = "test_${System.currentTimeMillis()}@example.com"
-    fun phone() = "+70000000000"  // Явно невалидный
-    fun name() = "Test User ${UUID.randomUUID().toString().take(4)}"
+// ✅ GOOD: Описание класса данных без конкретики
+testCase("Регистрация нового пользователя") {
+    step("Ввести данные") {
+        action = "Ввести валидный email и телефон в формате +7XXXXXXXXXX"
+        expected = "Данные приняты, форма готова к отправке"
+    }
 }
 
-// ✅ GOOD: Домены для тестов (RFC 2606)
-val safeEmails = listOf(
-    "user@example.com",      // RFC 2606 reserved
-    "test@example.org",
-    "auto@test.example"
-)
+// ✅ GOOD: Явно тестовые placeholder'ы
+testCase("Проверка профиля") {
+    precondition("Залогиниться под тестовым пользователем (Test User)")
 
-// ✅ GOOD: Faker для генерации
-val faker = Faker()
-val payload = RegisterRequest(
-    email = faker.internet.safeEmail(),  // Гарантированно фейковый
-    phone = faker.phoneNumber.phoneNumber(),
-    fullName = faker.name.fullName()
-)
+    step("Проверить отображение имени") {
+        action = "Открыть профиль"
+        expected = "Имя пользователя отображается корректно"
+    }
+}
+
+// ✅ GOOD: Ссылка на тестовое окружение
+testCase("Оплата заказа") {
+    precondition("Использовать тестовую карту из документации платёжного шлюза")
+}
 ```
 
-## What to look for in code review
+## What to look for in review
 
-- Email с реальными доменами (@gmail.com, @yandex.ru, @company.com)
+- Конкретные email с @gmail.com, @yandex.ru, @company.com
 - Телефоны в реальных форматах (+7916..., +7903...)
-- ФИО похожие на реальные (не "Test User")
-- Номера карт, паспортов, ИНН
-- Комментарии "это мой email" или "тестовый аккаунт Васи"
+- ФИО в формате "Фамилия Имя Отчество"
+- ИНН, номера паспортов, карт
+- Ссылки на "аккаунт Васи" или "мой тестовый email"

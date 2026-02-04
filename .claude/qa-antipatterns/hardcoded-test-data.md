@@ -1,66 +1,64 @@
-# Hardcoded Test Data
+# Hardcoded Test Data (Manual Test Cases)
+
+**Applies to:** `/testcases` (мануальные тест-кейсы в Kotlin DSL)
 
 ## Why this is bad
 
-Захардкоженные данные в тестах:
-- Конфликты при параллельном запуске (одинаковые email/phone)
-- Невозможно запустить тест дважды без cleanup
-- Скрывают edge cases (всегда один и тот же input)
-- Создают ложное чувство покрытия
+Захардкоженные данные в мануальных тест-кейсах:
+- Тестировщик копирует значения вместо понимания границ
+- Скрывают логику выбора тестовых данных (почему именно это значение?)
+- При изменении требований нужно искать все места с хардкодом
+- Невозможно переиспользовать тест-кейс для других окружений
 
 ## Bad Example
 
 ```kotlin
-// ❌ BAD: Статичные данные
-object TestData {
-    val USER_EMAIL = "test@example.com"  // Конфликт при втором запуске
-    val USER_PHONE = "+79991234567"
-    val USER_PASSWORD = "Password123!"
-}
+// ❌ BAD: Конкретные значения в expected
+testCase("Успешная регистрация") {
+    precondition("Пользователь не зарегистрирован")
 
-@Test
-fun `user can register`() {
-    val payload = RegisterRequest(
-        email = TestData.USER_EMAIL,  // Всегда одинаковый
-        phone = TestData.USER_PHONE,
-        password = TestData.USER_PASSWORD
-    )
-    // ...
+    step("Ввести email") {
+        action = "Ввести test@example.com"  // Почему именно этот?
+        expected = "Email отображается"
+    }
+
+    step("Ввести пароль") {
+        action = "Ввести Password123!"  // Захардкожен конкретный пароль
+        expected = "Пароль принят"
+    }
 }
 ```
 
 ## Good Example
 
 ```kotlin
-// ✅ GOOD: Object Mother pattern с генерацией
-object RegistrationTestData {
+// ✅ GOOD: Описание класса данных, не конкретное значение
+testCase("Успешная регистрация") {
+    precondition("Пользователь не зарегистрирован")
 
-    fun validRequest() = RegisterRequest(
-        email = "auto_${System.currentTimeMillis()}@example.com",
-        phone = "+7999${(1000000..9999999).random()}",
-        password = "Test#${UUID.randomUUID().toString().take(8)}",
-        fullName = "Test User"
-    )
+    step("Ввести email") {
+        action = "Ввести валидный email (формат user@domain.com)"
+        expected = "Email отображается в поле ввода"
+    }
 
-    fun withInvalidEmail() = validRequest().copy(
-        email = "invalid-email"
-    )
-
-    fun withWeakPassword() = validRequest().copy(
-        password = "weak"
-    )
+    step("Ввести пароль") {
+        action = "Ввести пароль, соответствующий требованиям (≥8 символов, буквы + цифры + спецсимвол)"
+        expected = "Пароль принят, индикатор силы — зелёный"
+    }
 }
 
-@Test
-fun `user can register`() {
-    val payload = RegistrationTestData.validRequest()  // Уникальный каждый раз
-    // ...
+// ✅ GOOD: Для BVA — указать границу, не конкретное значение
+testCase("Минимальная длина пароля") {
+    step("Ввести пароль") {
+        action = "Ввести пароль длиной ровно 8 символов (минимальная граница)"
+        expected = "Пароль принят"
+    }
 }
 ```
 
-## What to look for in code review
+## What to look for in review
 
-- `const val` или `val` с фиксированными email/phone/id
-- Одинаковые данные в нескольких тестах
-- Комментарии "change this before running"
-- Тесты с `@Disabled` из-за конфликтов данных
+- Конкретные email/phone/password в `action` или `expected`
+- Отсутствие пояснения "почему это значение" (граница? valid? invalid?)
+- Одинаковые literal значения в разных тест-кейсах
+- Технические детали вместо бизнес-описания
