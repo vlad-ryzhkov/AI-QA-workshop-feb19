@@ -137,3 +137,22 @@ ALWAYS follow the rules and architecture defined in the root file: CLAUDE.md
 ### 🧠 Prompt Engineering
 
 - **[Anthropic Prompt Guide](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview)** — лучшие практики
+
+---
+
+## Workshop Checkpoints
+
+Если отстали — переключитесь на нужную ветку:
+
+| Этап | Ветка | Что готово |
+|------|-------|------------|
+| Старт | `step-0-start` | Только requirements v1 и gradle |
+| После /analyze | `step-1-audit-ready` | + скилл анализа, audit report |
+| После /testcases и /api-tests | `step-2-tests-ready` | + агент, антипаттерны, все тесты |
+| После /screenshot-analyze | `step-3-visual-ready` | + скриншоты (= main) |
+
+**Команда переключения:**
+```bash
+git fetch origin
+git checkout step-2-tests-ready  # или другая ветка
+```
