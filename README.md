@@ -52,14 +52,20 @@ QA-инженерам (Manual & Auto), желающим ускорить еже�
 
 **Главное правило:** файлы из `.claude/skills/` должны попасть в контекст AI. Способ зависит от инструмента.
 
-Для пользователей Cursor: Чтобы CLAUDE.md работал как глобальная инструкция (а не просто справочный файл), создайте файл .cursor/rules/00-project-context.mdc с таким содержанием:
+**Для пользователей Cursor:** Чтобы `CLAUDE.md` работал как глобальная инструкция (а не просто справочный файл), создайте файл `.cursor/rules/00-project-context.mdc`:
 
+```markdown
 ---
-description: Project Context & Architecture
+description: Read project context from CLAUDE.md
 globs: *
+alwaysApply: true
 ---
-# PROJECT CONTEXT
-ALWAYS follow the rules and architecture defined in the root file: CLAUDE.md
+
+# Project Context
+
+Read and follow the architecture and rules defined in:
+@CLAUDE.md
+```
 
 ### Универсальные принципы, независимо от инструмента
 
@@ -111,8 +117,11 @@ ALWAYS follow the rules and architecture defined in the root file: CLAUDE.md
 ### 🟣 Anthropic (Claude)
 
 - **[Projects & Knowledge](https://www.anthropic.com/news/projects)** — "память" проекта в веб-версии
-- **[System Prompts](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/system-prompts)** — как работает `qa_agent.md`
+- **[System Prompts](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/system-prompts)**
 - **[Anthropic Cookbook](https://github.com/anthropics/anthropic-cookbook)** — примеры агентов
+- **[Skills Custom Development](https://platform.claude.com/cookbook/skills-notebooks-03-skills-custom-development)**
+- **[Agent Skills Overview](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview)**
+
 
 ### ⚪️ Cursor (IDE)
 
@@ -146,7 +155,7 @@ ALWAYS follow the rules and architecture defined in the root file: CLAUDE.md
 
 | Этап | Ветка | Что готово |
 |------|-------|------------|
-| Старт | `step-0-start` | Только requirements v1 и gradle |
+| Старт | `step-0-start` | Только requirements v1 |
 | После /analyze | `step-1-audit-ready` | + скилл анализа, audit report |
 | После /testcases и /api-tests | `step-2-tests-ready` | + агент, антипаттерны, все тесты |
 | После /screenshot-analyze | `step-3-visual-ready` | + скриншоты (= main) |
@@ -156,3 +165,43 @@ ALWAYS follow the rules and architecture defined in the root file: CLAUDE.md
 git fetch origin
 git checkout step-2-tests-ready  # или другая ветка
 ```
+
+---
+
+## 📖 Glossary (Расшифровка аббревиатур)
+
+<details>
+<summary>Развернуть полный список</summary>
+
+| Аббревиатура | Расшифровка | Описание |
+|--------------|-------------|----------|
+| **QA** | Quality Assurance | Обеспечение качества |
+| **API** | Application Programming Interface | Программный интерфейс приложения |
+| **UI** | User Interface | Пользовательский интерфейс |
+| **L10n** | Localization | Локализация (L + 10 букв + n) |
+| **RTL** | Right-to-Left | Направление текста справа налево (арабский, иврит) |
+| **CLDR** | Common Locale Data Repository | Репозиторий данных локализации (Unicode) |
+| **DTO** | Data Transfer Object | Объект передачи данных |
+| **DSL** | Domain-Specific Language | Предметно-ориентированный язык |
+| **TC** | Test Case | Тестовый сценарий |
+| **BVA** | Boundary Value Analysis | Анализ граничных значений (техника тест-дизайна) |
+| **EP** | Equivalence Partitioning | Эквивалентное разбиение (техника тест-дизайна) |
+| **PII** | Personally Identifiable Information | Персональные данные (ФИО, телефон, email) |
+| **CTA** | Call to Action | Кнопка призыва к действию ("Заказать", "Далее") |
+| **ETA** | Estimated Time of Arrival | Расчётное время прибытия |
+| **POI** | Point of Interest | Точка интереса (на карте) |
+| **OCR** | Optical Character Recognition | Оптическое распознавание символов |
+| **LQA** | Linguistic Quality Assurance | Лингвистический контроль качества |
+| **SQL** | Structured Query Language | Язык запросов к базам данных |
+| **XSS** | Cross-Site Scripting | Межсайтовый скриптинг (тип уязвимости) |
+| **IDOR** | Insecure Direct Object Reference | Небезопасная прямая ссылка на объект (уязвимость) |
+| **OWASP** | Open Web Application Security Project | Проект по безопасности веб-приложений |
+| **ISTQB** | International Software Testing Qualifications Board | Международный совет по квалификации тестировщиков |
+| **BABOK** | Business Analysis Body of Knowledge | Свод знаний по бизнес-анализу |
+| **HTTP** | HyperText Transfer Protocol | Протокол передачи гипертекста |
+| **HTML** | HyperText Markup Language | Язык разметки гипертекста |
+| **JSON** | JavaScript Object Notation | Формат обмена данными |
+| **UTF-8** | Unicode Transformation Format 8-bit | Формат кодирования Unicode |
+| **CIO** | Coroutine I/O | Асинхронный движок Ktor для HTTP |
+
+</details>
