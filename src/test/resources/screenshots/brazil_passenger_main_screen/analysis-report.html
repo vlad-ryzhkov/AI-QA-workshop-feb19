@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L10n Report — Brazil</title>
+    <style>
+        :root {
+            --pass: #22c55e; --fail: #ef4444; --warn: #f59e0b;
+            --info: #3b82f6; --crit: #dc2626; --bg: #f8fafc;
+            --card: #fff; --border: #e2e8f0; --text: #1e293b; --muted: #64748b;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; padding: 1.5rem; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid var(--border); }
+        h1 { font-size: 1.5rem; margin-bottom: 0.25rem; }
+        .sub { color: var(--muted); font-size: 0.85rem; }
+        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; margin-bottom: 1.5rem; }
+        .card { background: var(--card); border-radius: 8px; padding: 0.75rem; border: 1px solid var(--border); text-align: center; }
+        .card .v { font-size: 1.5rem; font-weight: 700; display: block; }
+        .card .l { color: var(--muted); font-size: 0.75rem; }
+        .card.crit .v { color: var(--crit); }
+        .card.fail .v { color: var(--fail); }
+        .card.warn .v { color: var(--warn); }
+        .banner { background: #dbeafe; border: 1px solid #93c5fd; border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 1.5rem; font-size: 0.85rem; color: #1e40af; }
+        .tag { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 600; background: #e2e8f0; }
+        .tag.sem { background: #fef3c7; color: #92400e; }
+        .tag.cur { background: #fce7f3; color: #be185d; }
+        .tag.ui { background: #f3e8ff; color: #7c3aed; }
+        .tag.rtl { background: #ffedd5; color: #c2410c; }
+        .tag.cons { background: #e0e7ff; color: #4338ca; }
+        .sev { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; }
+        .sev.crit { background: #fee2e2; color: #dc2626; }
+        .sev.err { background: #fecaca; color: #b91c1c; }
+        .sev.warn { background: #fef3c7; color: #b45309; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-bottom: 1.5rem; }
+        th, td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid var(--border); }
+        th { background: #1e293b; color: white; font-weight: 600; }
+        tr:hover { background: #f8fafc; }
+        h2 { font-size: 1.1rem; margin: 1.5rem 0 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+        .screenshots { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
+        .screenshot-card { background: var(--card); border-radius: 10px; border: 1px solid var(--border); overflow: hidden; }
+        .screenshot-card img { width: 100%; display: block; }
+        .screenshot-card .label { padding: 0.5rem; text-align: center; font-size: 0.8rem; font-weight: 600; background: #f1f5f9; }
+        .verdict { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 600; margin-left: 0.5rem; }
+        .verdict.pass { background: #dcfce7; color: #166534; }
+        .verdict.fail { background: #fee2e2; color: #991b1b; }
+        .verdict.warn { background: #fef3c7; color: #92400e; }
+        .recommendations { background: var(--card); border-radius: 10px; border: 1px solid var(--border); padding: 1rem 1.5rem; }
+        .recommendations ol { margin-left: 1rem; }
+        .recommendations li { margin: 0.5rem 0; }
+        footer { text-align: center; margin-top: 2rem; color: var(--muted); font-size: 0.75rem; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>L10n Report — Brazil</h1>
+        <p class="sub">Region: BR (R$ BRL) | 2026-02-05</p>
+    </header>
+
+    <div class="grid">
+        <div class="card crit"><span class="v">4</span><span class="l">КРИТИЧНО</span></div>
+        <div class="card fail"><span class="v">4</span><span class="l">ОШИБКИ</span></div>
+        <div class="card warn"><span class="v">2</span><span class="l">ВНИМАНИЕ</span></div>
+        <div class="card"><span class="v">3</span><span class="l">ФАЙЛОВ</span></div>
+    </div>
+
+    <div class="banner">
+        ℹ️ <strong>Region:</strong> Brazil (BR) | <strong>Currency:</strong> R$ (BRL) — корректна для всех локалей<br>
+        ⚠️ <strong>Правило валют:</strong> Сравниваем формат на всех элементах: R$13 vs BRL$13 vs R$13.00
+    </div>
+
+    <h2>Скриншоты</h2>
+    <div class="screenshots">
+        <div class="screenshot-card">
+            <img src="en_BR.png" alt="en_BR.png">
+            <div class="label">en_BR.png <span class="verdict warn">⚠️ 1 issue</span></div>
+        </div>
+        <div class="screenshot-card">
+            <img src="ru_BR.png" alt="ru_BR.png">
+            <div class="label">ru_BR.png <span class="verdict warn">⚠️ 3 issues</span></div>
+        </div>
+        <div class="screenshot-card">
+            <img src="ar_BR.png" alt="ar_BR.png">
+            <div class="label">ar_BR.png <span class="verdict fail">❌ 6 issues</span></div>
+        </div>
+    </div>
+
+    <h2>ТОП-10 Issues</h2>
+    <table>
+        <thead>
+            <tr><th>#</th><th>Файл</th><th>Категория</th><th>Severity</th><th>Описание проблемы</th></tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>ar_BR.png</td>
+                <td><span class="tag sem">Семантика</span></td>
+                <td><span class="sev crit">КРИТИЧНО</span></td>
+                <td><strong>"إيجاد الضحايا"</strong> (Найти жертв) — CTA кнопка с опасным контентом. Ожидается: "البحث عن العروض" (Искать предложения)</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>ar_BR.png</td>
+                <td><span class="tag sem">Семантика</span></td>
+                <td><span class="sev crit">КРИТИЧНО</span></td>
+                <td><strong>"بخيل"</strong> (Скупой/жадный) — тариф Economic переведён оскорбительно. Ожидается: "اقتصادي" (Эконом)</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>ar_BR.png</td>
+                <td><span class="tag sem">Семантика</span></td>
+                <td><span class="sev crit">КРИТИЧНО</span></td>
+                <td><strong>"عزاء"</strong> (Соболезнования) — тариф Comfy с wrong context. Ожидается: "مريح" (Комфорт)</td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>ar_BR.png</td>
+                <td><span class="tag sem">Семантика</span></td>
+                <td><span class="sev crit">КРИТИЧНО</span></td>
+                <td><strong>"شارع إجرام"</strong> (Улица Преступления) — "Ingram" транслитерировано как "إجرام". Ожидается: "شارع إنجرام"</td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>ru_BR.png</td>
+                <td><span class="tag cur">CURRENCY</span></td>
+                <td><span class="sev err">ОШИБКА</span></td>
+                <td><strong>Несогласованный формат валюты:</strong> Checkbox показывает "BRL$13", остальной UI — "R$13". Должно быть единообразно: R$13</td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>ar_BR.png</td>
+                <td><span class="tag rtl">RTL</span></td>
+                <td><span class="sev err">ОШИБКА</span></td>
+                <td><strong>Layout не отзеркален:</strong> Карточки тарифов, иконки и отступы остались LTR. RTL локаль требует полного mirroring</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>en_BR.png</td>
+                <td><span class="tag ui">UI</span></td>
+                <td><span class="sev err">ОШИБКА</span></td>
+                <td><strong>Truncation:</strong> Destination text "~approx. 2..." обрезан. Полный текст не помещается в контейнер</td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td>ru_BR.png</td>
+                <td><span class="tag ui">UI</span></td>
+                <td><span class="sev err">ОШИБКА</span></td>
+                <td><strong>Text expansion:</strong> "Harlem Kettlebell Club" + "~24 мин" — проверить что весь текст виден без обрезания</td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <td>ar_BR.png</td>
+                <td><span class="tag cons">Консист.</span></td>
+                <td><span class="sev warn">ВНИМАНИЕ</span></td>
+                <td><strong>Смешение цифровых систем:</strong> ETA использует "٢٤" (восточно-арабские), цены — "13" (западные). Рекомендуется единообразие</td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td>ru_BR.png</td>
+                <td><span class="tag sem">Семантика</span></td>
+                <td><span class="sev warn">ВНИМАНИЕ</span></td>
+                <td><strong>"Ищу водителей"</strong> — CTA в 1-м лице ("Я ищу") нетипично для кнопки. Стандарт: "Найти водителей" или "Поиск водителей"</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>Рекомендации</h2>
+    <div class="recommendations">
+        <ol>
+            <li><strong>Важно:</strong> Заменить CTA "إيجاد الضحايا" (Найти жертв) → "البحث عن العروض" (Искать предложения)</li>
+            <li><strong>Важно:</strong> Исправить тарифы AR: "بخيل" (скупой) → "اقتصادي", "عزاء" (соболезнования) → "مريح"</li>
+            <li><strong>Важно:</strong> Исправить транслитерацию "Ingram" → "إنجرام" (не "إجرام" — преступление)</li>
+            <li><strong>Важно:</strong> Унифицировать формат валюты: везде R$, не BRL$</li>
+            <li><strong>Важно:</strong> Включить RTL mirroring для ar локали</li>
+            <li><strong>Рекомендация:</strong> Проверить truncation на destination field во всех локалях</li>
+        </ol>
+    </div>
+
+    <footer>
+        Проверено: 10/10 | Файлов: 3 | Confidence: HIGH
+    </footer>
+</div>
+</body>
+</html>

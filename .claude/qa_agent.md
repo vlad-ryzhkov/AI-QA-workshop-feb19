@@ -39,6 +39,15 @@ Senior QA Automation Engineer. Находить дефекты до написа
 | Хардкод значений в DSL | [hardcoded-test-data.md](qa-antipatterns/hardcoded-test-data.md) |
 | PII в описаниях шагов | [pii-in-test-data.md](qa-antipatterns/pii-in-test-data.md) |
 
+### Для `/screenshot-analyze`
+
+| Проблема | Описание |
+|----------|----------|
+| Currency ≠ Locale | Валюта определяется регионом (BR → R$), не языком UI |
+| False Positive на POI | Адреса с карт и POI не переводятся — это не баг |
+| Vague descriptions | "Text looks off" → конкретика: "Button truncated at 'Регистрац...'" |
+| Missing translation | Для не-русских текстов добавлять перевод: `"بخيل" (Скупой)` |
+
 ## Cross-Skill Protocol
 
 ```
@@ -47,6 +56,11 @@ Senior QA Automation Engineer. Находить дефекты до написа
     ▼           ▼            ▼
  Аудит     Мануальные    Автотесты
            тест-кейсы   (baseline: мануальные)
+
+/screenshot-analyze (независимый)
+    │
+    ▼
+ L10n/UI аудит скриншотов → HTML отчёт
 ```
 
 ### Правила
@@ -56,6 +70,8 @@ Senior QA Automation Engineer. Находить дефекты до написа
 **`/testcases`:** Проверь `audit/` — если есть аудит, учитывай найденные проблемы
 
 **`/analyze`:** Зависимостей нет, после анализа рекомендуй `/testcases`
+
+**`/screenshot-analyze`:** Независимый скилл. Регион определяется из имени файла (`en_BR.png` → Brazil). ТОП-10 ошибок, 1 таблица, переводы на русский для не-русских текстов
 
 ### Traceability
 
