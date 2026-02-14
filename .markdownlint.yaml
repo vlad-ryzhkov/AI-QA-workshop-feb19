@@ -1,0 +1,38 @@
+# Selective rules — включаем только нужные
+default: false
+
+# Headings
+MD001: true    # heading-increment: заголовки увеличиваются на 1 уровень
+MD003:         # heading-style
+  style: "atx"
+MD018: true    # no-missing-space-atx: пробел после # в заголовке
+MD019: true    # no-multiple-spaces-atx: один пробел после #
+MD022: true    # blanks-around-headings: пустые строки вокруг заголовков
+MD025: true    # single-h1: один H1 на документ
+
+# Lists
+MD004:         # ul-style
+  style: "dash"
+MD005: true    # list-indent: консистентный indent
+MD007:         # ul-indent
+  indent: 2
+MD030: true    # list-marker-space: пробел после маркера
+
+# Code blocks
+MD040: true    # fenced-code-language: язык указан для code blocks
+MD046:         # code-block-style
+  style: "fenced"
+
+# Links
+MD042: true    # no-empty-links: нет пустых ссылок
+
+# Tables
+MD055:         # table-pipe-style
+  style: "leading_and_trailing"
+MD056: true    # table-column-count: одинаковое число колонок
+
+# Whitespace
+MD009: true    # no-trailing-spaces
+MD012:         # no-multiple-blanks
+  maximum: 2
+MD047: true    # single-trailing-newline

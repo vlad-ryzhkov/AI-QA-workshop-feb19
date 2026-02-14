@@ -1,0 +1,6 @@
+---
+description: QA Agent — принципы, анти-паттерны, протоколы
+globs: "src/test/**,audit/**,specifications/**"
+alwaysApply: false
+---
+@.claude/qa_agent.md

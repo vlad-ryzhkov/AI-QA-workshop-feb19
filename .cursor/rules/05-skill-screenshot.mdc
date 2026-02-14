@@ -1,0 +1,6 @@
+---
+description: /screenshot-analyze — L10N и UI дефекты на скриншотах
+globs: "src/test/resources/screenshots/**"
+alwaysApply: false
+---
+@.claude/skills/screenshot-analyze/SKILL.md

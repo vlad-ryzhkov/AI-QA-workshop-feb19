@@ -32,6 +32,44 @@ Senior QA Automation Engineer. Находить дефекты до написа
 - Отсутствует endpoint/метод для проверки результата
 - Security-требования без деталей (какие роли? какие права?)
 
+## Skill Authoring Guidelines
+
+### Лимит размера: 500 строк
+
+**SKILL.md не должен превышать 500 строк.** Если больше — разбивай:
+
+| Что выносить | Куда |
+|--------------|------|
+| Большие примеры кода (>50 строк) | `references/examples.md` |
+| Справочные таблицы | `references/tables.md` |
+| Чек-листы проверок | `references/checklist.md` |
+| Анти-паттерны | `.claude/qa-antipatterns/*.md` |
+| Исполняемый код | `scripts/*.py` или `scripts/*.sh` |
+
+### Структура при разбиении
+
+```
+.claude/skills/{skill-name}/
+├── SKILL.md           # ≤500 строк — основная логика
+├── references/
+│   ├── examples.md    # Большие примеры
+│   └── checklist.md   # Детальные чек-листы
+└── scripts/
+    └── generate.py    # Автоматизация
+```
+
+### Progressive Disclosure
+
+```
+Уровень 1: YAML description     → Всегда загружается (< 100 символов)
+Уровень 2: Тело SKILL.md        → При активации (≤ 500 строк)
+Уровень 3: references/, scripts/ → По явному запросу
+```
+
+**Правило:** Если AI не справляется с задачей — проверь, не слишком ли большой skill.
+
+---
+
 ## Interaction Protocol
 
 - Строго следуй инструкциям из соответствующего `SKILL.md`
@@ -93,19 +131,28 @@ Senior QA Automation Engineer. Находить дефекты до написа
 ## Cross-Skill Protocol
 
 ```
-/analyze → /testcases → /api-tests
-    │           │            │
-    ▼           ▼            ▼
- Аудит     Мануальные    Автотесты
-           тест-кейсы   (baseline: мануальные)
+/repo-scout → /test-plan → /analyze → /testcases → /api-tests
+     │             │            │           │            │
+     ▼             ▼            ▼           ▼            ▼
+  Разведка     План покрытия  Аудит    Мануальные    Автотесты
+  репо         + приоритеты            тест-кейсы   (baseline: мануальные)
 
 /screenshot-analyze (независимый)
     │
     ▼
  L10n/UI аудит скриншотов → HTML отчёт
+
+/doc-lint (независимый)
+    │
+    ▼
+ Аудит документации → audit/doc-lint-report.md
 ```
 
 ### Правила
+
+**`/repo-scout`:** Зависимостей нет, может быть первым шагом в новом репо. После — рекомендуй `/test-plan`
+
+**`/test-plan`:** Требует `audit/repo-scout-report.md`. После — рекомендуй `/init-project` + `/analyze`
 
 **`/api-tests`:** Проверь `src/test/testCases/` — если есть мануальные тесты, используй как baseline
 
@@ -115,6 +162,8 @@ Senior QA Automation Engineer. Находить дефекты до написа
 
 **`/screenshot-analyze`:** Независимый скилл. Регион определяется из имени файла (`en_BR.png` → Brazil). ТОП-10 ошибок, 1 таблица, переводы на русский для не-русских текстов
 
+**`/doc-lint`:** Независимый скилл. Сканирует human-readable файлы на размер, структуру, дубликаты и SSOT-нарушения. Артефакт: `audit/doc-lint-report.md`
+
 ### Traceability
 
 ```kotlin
@@ -122,4 +171,36 @@ Senior QA Automation Engineer. Находить дефекты до написа
 @Link("TC-01")  // Ссылка на мануальный тест
 fun `successful registration`() { ... }
 ```
+
+## Skill Completion Protocol
+
+Каждый скилл ОБЯЗАН завершаться блоком `SKILL COMPLETE` в чате. Без блока — результат незавершён.
+
+Формат:
+```
+✅ SKILL COMPLETE: /{skill-name}
+├─ Артефакты: [список созданных файлов]
+├─ Self-Review: [путь к _self_review.md | "встроен" для screenshot-analyze]
+├─ Compilation: [PASS/FAIL/N/A]
+├─ Upstream: [использованный upstream-артефакт | "нет"]
+└─ Score: [итоговый % из self-review scorecard]
+```
+
+Правила:
+1. Блок печатается В ЧАТ как последнее сообщение скилла
+2. Если Compilation = FAIL — скилл НЕ ЗАВЕРШЁН, исправь и повтори
+3. Если Score < 70% — явно предупреди пользователя
+
+### Compilation Gate
+
+| Скилл | Gate | Команда |
+|-------|------|---------|
+| `/api-tests` | ОБЯЗАТЕЛЬНО | `./gradlew compileTestKotlin` |
+| `/testcases` | N/A | DSL не компилируется отдельно |
+| `/analyze` | N/A | Markdown |
+| `/screenshot-analyze` | N/A | HTML |
+| `/doc-lint` | N/A | Markdown |
+
+Порядок для `/api-tests`: Генерация → Self-Check → **Compilation** → Self-Review → SKILL COMPLETE.
+Компиляция ПЕРЕД self-review. Max 3 попытки. После 3 FAIL — STOP.
 

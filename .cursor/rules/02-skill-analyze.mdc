@@ -1,0 +1,6 @@
+---
+description: /analyze — QA-аудит требований и спецификаций
+globs: "audit/**,specifications/**"
+alwaysApply: false
+---
+@.claude/skills/analyze/SKILL.md

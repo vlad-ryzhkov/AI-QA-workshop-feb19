@@ -1,0 +1,6 @@
+---
+description: Контекст проекта — стек, конвенции, безопасность
+globs: *
+alwaysApply: true
+---
+@CLAUDE.md

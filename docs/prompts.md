@@ -250,8 +250,37 @@ Context: Kotlin 1.9, JUnit 5, Ktor Client, Kotest matchers.
 Не хватает edge cases для [область].
 ```
 
+### Brave Mode (снятие лимита токенов)
+Перед большой задачей (цепочка скиллов, полный аудит, генерация с нуля) скажи:
+
+```
+без ограничений по токенам
+```
+
+или
+
+```
+unlimited
+```
+
+Это отключает Token Economy (PAUSE при >20K токенов) на текущую задачу. AI не будет останавливаться и спрашивать — выполнит всё до конца.
+
 ### Комбинируй с Skills
 Промпты из этого файла — для ad-hoc задач. Для повторяющихся задач используй skills:
 - `/analyze` — аудит требований
 - `/testcases` — генерация ручных тестов
 - `/api-tests` — генерация API автотестов
+
+_____________
+все агенты разом:
+You are the orchestrator agent for a full QA pipeline. Use the Task tool to spawn these parallel sub-agents, each working independently and simultaneously:
+
+Agent 1 - SPEC ANALYZER: Read the API spec and SKILL.md for analyze skill. Produce a comprehensive audit report identifying blockers, missing fields, inconsistencies, and security gaps. Write results to /output/spec-audit.md.
+
+Agent 2 - TEST CASE GENERATOR: Read the API spec and generate exhaustive manual test cases covering positive, negative, boundary, and integration scenarios. Write to /output/test-cases.md following our TestCases.md template.
+
+Agent 3 - API TEST SCAFFOLDER: Generate Kotlin API tests for all endpoints using our existing patterns in src/test/. Run './gradlew test' iteratively until all tests compile and pass. Commit passing tests.
+
+Agent 4 - DOCUMENTATION AUDITOR: Review all .md files against CLAUDE.md conventions and antipattern files. Fix formatting, remove stale references, ensure cross-references are valid. Commit fixes.
+
+After all agents complete, synthesize their outputs into a unified /output/qa-pipeline-report.md with a coverage matrix mapping spec endpoints → test cases → automated tests → doc references. Track progress using TodoWrite.

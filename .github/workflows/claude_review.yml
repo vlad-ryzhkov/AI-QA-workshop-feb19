@@ -1,0 +1,51 @@
+name: Claude PR Review
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+  issue_comment:
+    types: [created]
+
+jobs:
+  claude-review:
+    if: |
+      (github.event_name == 'pull_request') ||
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude'))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Claude Code Review
+        uses: anthropics/claude-code-action@beta
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          model: claude-sonnet-4-5-20250929
+          max_turns: 40
+          allowed_tools: |
+            Bash(git diff)
+            Bash(git log)
+            Read
+            Glob
+            Grep
+            WebFetch
+          direct_prompt: |
+            Ты — Senior QA Engineer. Проведи code review этого PR.
+
+            Контекст проекта:
+            - QA Automation: Kotlin, Ktor, Kotest, JUnit 5, Allure
+            - Стек зафиксирован — не предлагай альтернативы из BANNED списка
+            - Читай CLAUDE.md для полного контекста
+
+            Фокус ревью:
+            1. **Спецификации** (specifications/): используй подход /analyze — ищи противоречия и пробелы
+            2. **Тестовый код** (src/test/kotlin/): проверяй anti-patterns из .claude/qa-antipatterns/
+            3. **AI-файлы** (.claude/, CLAUDE.md): проверяй консистентность и размеры
+
+            Формат: inline comments на проблемных строках. Общий summary в конце.

@@ -1,0 +1,6 @@
+---
+description: /testcases — мануальные тест-кейсы в Kotlin DSL
+globs: "src/test/testCases/**"
+alwaysApply: false
+---
+@.claude/skills/testcases/SKILL.md

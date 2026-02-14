@@ -1,6 +1,7 @@
 ---
 name: testcases
-description: Генерирует ручные тест-кейсы (Kotlin DSL + Allure) с применением BVA, EP и строгим бизнес-контекстом. Запрещает хардкод данных и технические детали в expected.
+description: Генерирует ручные тест-кейсы (Kotlin DSL + Allure) с применением BVA, EP и строгим бизнес-контекстом. Запрещает хардкод данных и технические детали в expected. Используй для создания мануальных тестов, покрытия требований тест-кейсами или структурированных ручных проверок. Не используй для автотестов — для этого /api-tests.
+allowed-tools: "Read Write Edit Glob Grep"
 ---
 
 # Manual Test Case Generation (Kotlin DSL)
@@ -236,3 +237,6 @@ expected("В БД создана запись с email = '{UNIQUE_EMAIL}'")
 - **НЕ ИСПРАВЛЯТЬ** оригинальный результат — только анализ
 - **Считать конкретно** — "3 из 7 BANNED нарушены", не "есть проблемы"
 - **Файл рядом** — `RegistrationManualTests.kt` → `RegistrationManualTests_self_review.md`
+
+### Завершение
+После создания `*_self_review.md` — напечатай блок `SKILL COMPLETE` (формат в qa_agent.md).

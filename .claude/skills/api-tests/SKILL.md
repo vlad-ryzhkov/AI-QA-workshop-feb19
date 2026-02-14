@@ -1,6 +1,7 @@
 ---
 name: api-tests
-description: Генерирует Production-Ready API автотесты (Kotlin, Ktor/Kotest). Строгая 4-слойная архитектура. Anti-Overengineering.
+description: Генерирует Production-Ready API автотесты (Kotlin, Ktor/Kotest) с 4-слойной архитектурой. Используй для создания тестов REST API, покрытия спецификации автотестами или генерации тестов с нуля. Не используй для UI/E2E тестов или мануальных тест-кейсов — для этого /testcases.
+allowed-tools: "Read Write Edit Glob Grep Bash(./gradlew*)"
 ---
 
 # Senior SDET: API Test Automation
@@ -50,23 +51,27 @@ feature/
 package feature.models
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy
+import com.fasterxml.jackson.databind.annotation.JsonNaming
 
-// Request: контролируем контракт
+// Request: контролируем контракт (SNAKE_CASE через @JsonNaming на классе)
+@JsonNaming(SnakeCaseStrategy::class)
 data class FeatureRequest(
     val email: String,
     val phone: String,
-    @JsonProperty("full_name") val fullName: String
+    val fullName: String
 )
 
 // Response: устойчивость к изменениям backend
+@JsonNaming(SnakeCaseStrategy::class)
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class FeatureResponse(
-    @JsonProperty("user_id") val userId: String,
+    val userId: String,
     val status: String
 )
 
 // Error: унифицированная структура ошибок
+@JsonNaming(SnakeCaseStrategy::class)
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class ErrorResponse(
     val error: String? = null,
@@ -85,11 +90,16 @@ data class ErrorResponse(
 package feature.client
 
 import io.ktor.client.*
+import io.ktor.client.call.*
 import io.ktor.client.engine.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.request.*
+import io.ktor.client.statement.*
+import io.ktor.http.*
 import io.ktor.serialization.jackson.*
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
+import feature.models.*
 
 // Обертка ответа (ОБЯЗАТЕЛЬНО)
 data class ApiResponse<T>(
@@ -127,7 +137,24 @@ class FeatureApiClient(
 
     // Raw запрос для structural tests (missing fields)
     suspend fun createRaw(json: String): ApiResponse<FeatureResponse> {
-        // ... аналогично, но setBody(json)
+        val response = client.post("$baseUrl/api/v1/feature") {
+            contentType(ContentType.Application.Json)
+            setBody(json)
+        }
+        return ApiResponse(
+            status = response.status.value,
+            body = if (response.status.isSuccess()) response.body() else null,
+            error = if (!response.status.isSuccess()) tryParseError(response) else null,
+            rawBody = response.bodyAsText()
+        )
+    }
+
+    private suspend fun tryParseError(response: HttpResponse): ErrorResponse? {
+        return try {
+            response.body<ErrorResponse>()
+        } catch (_: Exception) {
+            null
+        }
     }
 
     fun close() = client.close()
@@ -356,6 +383,22 @@ fun successfulRegistration() { ... }
 
 ---
 
+## Compilation Gate (ОБЯЗАТЕЛЬНО)
+
+После генерации кода и ПЕРЕД Self-Review:
+
+```bash
+./gradlew compileTestKotlin
+```
+
+- BUILD SUCCESSFUL → продолжи к Self-Review
+- BUILD FAILED → исправь, повтори (max 3 попытки)
+- 3x FAIL → STOP, сообщи пользователю
+
+Код который не компилируется НЕ подлежит self-review.
+
+---
+
 ## 🔄 Self-Review Protocol (ОБЯЗАТЕЛЬНЫЙ ЭТАП)
 
 **После завершения генерации** выполни повторный анализ своего результата и создай отчёт критики.
@@ -430,3 +473,6 @@ fun successfulRegistration() { ... }
 - **Сверять с Manual Tests** — обязательно, если они есть в `src/test/testCases/`
 - **Проверять TestData** — каждый метод должен вызываться
 - **Файл рядом** — `RegistrationApiTests.kt` → `RegistrationApiTests_self_review.md`
+
+### Завершение
+После создания `*_self_review.md` — напечатай блок `SKILL COMPLETE` (формат в qa_agent.md).

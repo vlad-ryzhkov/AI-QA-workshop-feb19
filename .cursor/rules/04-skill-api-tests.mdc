@@ -1,0 +1,6 @@
+---
+description: /api-tests — API автотесты Ktor + Kotest
+globs: "src/test/kotlin/**"
+alwaysApply: false
+---
+@.claude/skills/api-tests/SKILL.md
