@@ -1,4 +1,4 @@
-package prompted.registration.models
+package prompted.registration1.models
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty

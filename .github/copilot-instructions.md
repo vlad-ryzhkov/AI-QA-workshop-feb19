@@ -37,7 +37,7 @@
 
 | Skill | Файл | Назначение |
 |-------|------|------------|
-| `/analyze` | `.claude/skills/analyze/SKILL.md` | QA-аудит требований |
+| `/analyze` | `.claude/skills/requirements-analysis/SKILL.md` | QA-аудит требований |
 | `/testcases` | `.claude/skills/testcases/SKILL.md` | Мануальные тест-кейсы (Kotlin DSL) |
 | `/api-tests` | `.claude/skills/api-tests/SKILL.md` | API автотесты (Ktor + Kotest) |
 | `/screenshot-analyze` | `.claude/skills/screenshot-analyze/SKILL.md` | L10N и UI дефекты |

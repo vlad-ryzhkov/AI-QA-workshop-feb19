@@ -1,6 +1,6 @@
-package prompted.registration.data
+package prompted.registration1.data
 
-import prompted.registration.models.RegisterRequest
+import prompted.registration1.models.RegisterRequest
 import java.util.UUID
 
 object RegistrationTestData {

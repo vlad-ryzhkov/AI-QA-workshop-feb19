@@ -1,6 +1,7 @@
-package registration.client
+package prompted.registration2.client
 
 import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import io.ktor.client.*
 import io.ktor.client.engine.*
@@ -10,9 +11,9 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.serialization.jackson.*
-import registration.models.ErrorResponse
-import registration.models.RegistrationRequest
-import registration.models.RegistrationResponse
+import prompted.registration2.models.ErrorResponse
+import prompted.registration2.models.RegistrationRequest
+import prompted.registration2.models.RegistrationResponse
 
 /**
  * Unified API response wrapper
@@ -32,7 +33,7 @@ class RegistrationApiClient(
     private val baseUrl: String = System.getenv("API_BASE_URL") ?: "http://localhost:8080",
     engine: HttpClientEngine? = null
 ) {
-    private val objectMapper = com.fasterxml.jackson.databind.ObjectMapper().apply {
+    private val objectMapper = ObjectMapper().apply {
         propertyNamingStrategy = PropertyNamingStrategies.SNAKE_CASE
         configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
     }

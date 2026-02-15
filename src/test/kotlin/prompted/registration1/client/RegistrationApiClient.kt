@@ -1,8 +1,8 @@
-package prompted.registration.client
+package prompted.registration1.client
 
-import prompted.registration.models.ErrorResponse
-import prompted.registration.models.RegisterRequest
-import prompted.registration.models.RegisterResponse
+import prompted.registration1.models.ErrorResponse
+import prompted.registration1.models.RegisterRequest
+import prompted.registration1.models.RegisterResponse
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.*

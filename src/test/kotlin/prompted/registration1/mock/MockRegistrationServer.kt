@@ -1,4 +1,4 @@
-package prompted.registration.mock
+package prompted.registration1.mock
 
 import io.ktor.client.engine.mock.*
 import io.ktor.http.*

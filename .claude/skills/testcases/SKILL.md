@@ -6,7 +6,7 @@ allowed-tools: "Read Write Edit Glob Grep"
 
 # Manual Test Case Generation (Kotlin DSL)
 
-Превращает требования в атомарные, поддерживаемые тест-кейсы для Allure TestOps.
+Превращает требования в атомарные, поддерживаемые тест-кейсы (поддерживаемые Allure TestOps).
 
 ## Алгоритм
 

@@ -1,14 +1,13 @@
-package registration
+package prompted.registration2
 
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldMatch
 import io.qameta.allure.*
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.*
-import registration.client.RegistrationApiClient
-import registration.data.RegistrationTestData
+import prompted.registration2.client.RegistrationApiClient
+import prompted.registration2.data.RegistrationTestData
 
 @Epic("User Management")
 @Feature("Registration API")

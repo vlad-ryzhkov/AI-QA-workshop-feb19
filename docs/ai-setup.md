@@ -9,14 +9,14 @@
 
 ```
 ┌─────────────────────────────────────────┐
-│  Уровень 1: CLAUDE.md (99 строк)       │  ← Всегда в контексте
+│  Уровень 1: CLAUDE.md (99 строк)        │  ← Всегда в контексте
 │  Tech Stack, Safety, Skills, Conventions│
 ├─────────────────────────────────────────┤
-│  Уровень 2: qa_agent.md (194 строки)   │  ← При вызове любого skill
+│  Уровень 2: qa_agent.md (194 строки)    │  ← При вызове любого skill
 │  Mindset, Anti-Patterns, Protocols      │
 ├─────────────────────────────────────────┤
-│  Уровень 3: SKILL.md + references/     │  ← При активации конкретного skill
-│  Алгоритм, примеры, чек-листы          │
+│  Уровень 3: SKILL.md + references/      │  ← При активации конкретного skill
+│  Алгоритм, примеры, чек-листы           │
 └─────────────────────────────────────────┘
 ```
 
@@ -38,14 +38,14 @@ AI загружает только нужный слой — экономия т
 
 | Скилл | Путь | Строк | Категория | Триггер |
 |-------|------|------:|-----------|---------|
-| `/analyze` | `.claude/skills/analyze/SKILL.md` | 154 | Analysis | QA-аудит требований |
+| `/analyze` | `.claude/skills/requirements-analysis/SKILL.md` | 154 | Analysis | QA-аудит требований |
 | `/testcases` | `.claude/skills/testcases/SKILL.md` | 242 | Generation | Мануальные тест-кейсы |
 | `/api-tests` | `.claude/skills/api-tests/SKILL.md` | 478 | Generation | API автотесты (Ktor + Kotest) |
 | `/screenshot-analyze` | `.claude/skills/screenshot-analyze/SKILL.md` | 337 | Analysis | L10N и UI дефекты |
-| `/init-project` | `.claude/skills/init-project/SKILL.md` | 160 | Meta | Генерация CLAUDE.md |
+| `/init-project` | `.claude/skills/init-project-claudemd/SKILL.md` | 160 | Meta | Генерация CLAUDE.md |
 | `/init-agent` | `.claude/skills/init-agent/SKILL.md` | 208 | Meta | Генерация qa_agent.md |
 | `/init-skill` | `.claude/skills/init-skill/SKILL.md` | 435 | Meta | Генерация нового skill |
-| `/doc-lint` | `.claude/skills/doc-lint/SKILL.md` | 362 | Analysis | Аудит качества документации |
+| `/doc-lint` | `.claude/skills/human-doc-lint/SKILL.md` | 362 | Analysis | Аудит качества документации |
 | `/update-ai-setup` | `.claude/skills/update-ai-setup/SKILL.md` | — | Meta | Обновление этого реестра |
 
 ### Анти-паттерны (shared)
@@ -72,8 +72,8 @@ AI загружает только нужный слой — экономия т
 | cldr-tables | `.claude/skills/screenshot-analyze/references/cldr-tables.md` | 151 | CLDR справочники |
 | checklists | `.claude/skills/screenshot-analyze/references/checklists.md` | 113 | Чек-листы L10N проверок |
 | html-template | `.claude/skills/screenshot-analyze/references/html-template.md` | 163 | HTML шаблон отчёта |
-| check-rules | `.claude/skills/doc-lint/references/check-rules.md` | 108 | Пороги, сигнатуры дубликатов, SSOT-матрица |
-| best-practices | `.claude/skills/doc-lint/references/best-practices.md` | 82 | Корпоративные практики документирования |
+| check-rules | `.claude/skills/human-doc-lint/references/check-rules.md` | 108 | Пороги, сигнатуры дубликатов, SSOT-матрица |
+| best-practices | `.claude/skills/human-doc-lint/references/best-practices.md` | 82 | Корпоративные практики документирования |
 
 ### Документация
 
@@ -88,7 +88,7 @@ AI загружает только нужный слой — экономия т
 |------|------|------------|
 | Cursor wrapper: project | `.cursor/rules/00-project-context.mdc` | `@CLAUDE.md` — alwaysApply |
 | Cursor wrapper: agent | `.cursor/rules/01-qa-agent.mdc` | `@.claude/qa_agent.md` |
-| Cursor wrapper: analyze | `.cursor/rules/02-skill-analyze.mdc` | `@.claude/skills/analyze/SKILL.md` |
+| Cursor wrapper: analyze | `.cursor/rules/02-skill-analyze.mdc` | `@.claude/skills/requirements-analysis/SKILL.md` |
 | Cursor wrapper: testcases | `.cursor/rules/03-skill-testcases.mdc` | `@.claude/skills/testcases/SKILL.md` |
 | Cursor wrapper: api-tests | `.cursor/rules/04-skill-api-tests.mdc` | `@.claude/skills/api-tests/SKILL.md` |
 | Cursor wrapper: screenshot | `.cursor/rules/05-skill-screenshot.mdc` | `@.claude/skills/screenshot-analyze/SKILL.md` |
@@ -148,7 +148,7 @@ OWASP, PII-проверки, SQL Injection, XSS, IDOR — встроены в mi
 
 ### 13. Meta-Skills Bootstrap
 Три мета-скилла для создания AI-конфигурации: `/init-project`, `/init-agent`, `/init-skill`.
-→ Реализация: `.claude/skills/init-project/`, `.claude/skills/init-agent/`, `.claude/skills/init-skill/`
+→ Реализация: `.claude/skills/init-project-claudemd/`, `.claude/skills/init-agent/`, `.claude/skills/init-skill/`
 
 ### 14. Plugin: claude-md-management
 Плагин для аудита и улучшения CLAUDE.md. Включён в `.claude/settings.json`.

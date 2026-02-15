@@ -3,4 +3,4 @@ description: /analyze — QA-аудит требований и специфик
 globs: "audit/**,specifications/**"
 alwaysApply: false
 ---
-@.claude/skills/analyze/SKILL.md
+@.claude/skills/requirements-analysis/SKILL.md

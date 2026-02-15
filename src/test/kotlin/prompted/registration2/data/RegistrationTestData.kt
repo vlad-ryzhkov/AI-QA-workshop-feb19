@@ -1,6 +1,6 @@
-package registration.data
+package prompted.registration2.data
 
-import registration.models.RegistrationRequest
+import prompted.registration2.models.RegistrationRequest
 import java.util.UUID
 
 /**
