@@ -13,34 +13,40 @@
 // ❌ BAD: Magic number, flaky on slow CI
 @Test
 fun `user status becomes ACTIVE after registration`() {
-    val userId = apiClient.register(validPayload)
+    val userId = RegistrationHelper.registerUser(FeatureTestData.validRequest())
 
     Thread.sleep(2000) // Ждём "достаточно"
 
-    val status = apiClient.getUserStatus(userId)
-    status shouldBe "ACTIVE"
+    val response = ApiHelper.apiClient.execute { GetUserRequest(userId) }
+    assertEquals("ACTIVE", response.body.status, "User should become ACTIVE")
 }
 ```
 
 ## Good Example
 
 ```kotlin
-// ✅ GOOD: Polling with timeout
+// ✅ GOOD: Awaitility polling with timeout
 @Test
 fun `user status becomes ACTIVE after registration`() {
-    val userId = apiClient.register(validPayload)
+    val userId = RegistrationHelper.registerUser(FeatureTestData.validRequest())
 
-    eventually(duration = 10.seconds, interval = 500.milliseconds) {
-        val status = apiClient.getUserStatus(userId)
-        status shouldBe "ACTIVE"
-    }
+    await()
+        .atMost(10, TimeUnit.SECONDS)
+        .pollInterval(500, TimeUnit.MILLISECONDS)
+        .until {
+            val response = ApiHelper.apiClient.execute { GetUserRequest(userId) }
+            response.body.status == "ACTIVE"
+        }
 }
 
-// ✅ GOOD: Awaitility (Java/Kotlin)
+// ✅ GOOD: Awaitility с assertion message
 await()
     .atMost(10, TimeUnit.SECONDS)
-    .pollInterval(500, TimeUnit.MILLISECONDS)
-    .until { apiClient.getUserStatus(userId) == "ACTIVE" }
+    .pollInterval(1, TimeUnit.SECONDS)
+    .untilAsserted {
+        val response = ApiHelper.apiClient.execute { GetUserRequest(userId) }
+        assertEquals("ACTIVE", response.body.status, "User should become ACTIVE within 10s")
+    }
 ```
 
 ## What to look for in code review

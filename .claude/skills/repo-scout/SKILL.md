@@ -33,6 +33,28 @@ allowed-tools: "Read Glob Grep Bash(ls*) Bash(wc*)"
 
 ## Алгоритм
 
+## Verbosity Protocol
+
+**Structured Output Priority:** Весь analysis идёт в артефакт (MD/HTML), не в чат.
+
+**Chat output (ограничения):**
+- Brief Summary: max 5 строк (что нашли, сколько, итог)
+- Findings table: max 15 строк (топ по severity)
+- Полный отчёт: `📊 Полный отчёт: {path}` + открыть файл
+
+**Iterative steps:** Не выводить прогресс по каждому файлу. Checkpoint только при:
+- Phase transition (Фаза N → Фаза N+1)
+- Blocker обнаружен
+- Завершение (SKILL COMPLETE)
+
+**Tools first:**
+- Grep → table → report, без "Now I will grep..."
+- Read → analyze → report, без "The file shows..."
+
+**Post-Check:** Inline перед SKILL COMPLETE (5-7 строк checklist), не отдельный файл.
+
+**Фазы 1-5:** Silent execution. **Фаза 6:** Только Summary table + "Отчёт: audit/repo-scout-report.md".
+
 ### Перед началом
 
 Прочитай `.claude/qa_agent.md` (если есть в рабочем проекте). Выведи:
@@ -197,109 +219,16 @@ Glob: **/*.http, **/api.http
 
 ### Фаза 6: Report Generation
 
-Собери отчёт в формате ниже и сохрани в `audit/repo-scout-report.md`.
+Собери отчёт и сохрани в `audit/repo-scout-report.md`. Полный шаблон отчёта с примерами — в `references/report-template.md`.
 
-## Формат вывода
-
-```markdown
-# Repo Scout Report: {repo-name}
-
-> Сгенерировано: {дата} | Скилл: /repo-scout
-
-## 1. Repository Profile
-
-| Параметр | Значение |
-|----------|----------|
-| Module | {module path из go.mod} |
-| Go Version | {версия} |
-| Service Type | {REST API / gRPC / Mixed / CLI / Consumer} |
-| Services | {список из cmd/} |
-| Source Files | {N .go файлов} |
-| Test Files | {N _test.go файлов} |
-
-### Ключевые зависимости
-
-| Категория | Библиотека |
-|-----------|-----------|
-| HTTP | {chi / gin / echo / stdlib} |
-| gRPC | {google.golang.org/grpc / нет} |
-| DB | {mysql / postgres / mongo} |
-| Queue | {sarama / segmentio-kafka / нет} |
-| Cache | {go-redis / нет} |
-
-## 2. API Surface Catalog
-
-**Summary:** {N REST endpoints} + {M gRPC RPCs} = {total}
-
-### REST Endpoints
-| # | Method | Path | Description | Auth |
-|---|--------|------|-------------|------|
-
-### gRPC RPCs
-| # | Service | Method | Request → Response | Streaming |
-|---|---------|--------|--------------------|-----------|
-
-### Дополнительные источники
-- [ ] HTTP client файлы: {путь или "нет"}
-- [ ] Postman коллекции: {путь или "нет"}
-
-## 3. Specification Inventory
-
-| Файл | Формат | Endpoints | Полнота |
-|------|--------|-----------|---------|
-| {путь} | {OpenAPI 3.0 / Swagger 2.0 / Proto3} | {N} | {Complete / Partial / Stale} |
-
-**Coverage:** {X}/{total} endpoints имеют спецификацию = {%}
-
-Формула: покрытые endpoints / (REST + gRPC) × 100
-
-## 4. Existing Test Coverage
-
-| Тип | Файлов | Расположение | Фреймворк |
-|-----|--------|-------------|-----------|
-| Unit | {N} | {internal/...} | {testify / stdlib} |
-| Integration | {N} | {путь} | {testify + sqlmock} |
-| E2E/API | {N или "внешний репо"} | {путь или ссылка} | {фреймворк} |
-
-## 5. Infrastructure
-
-| Компонент | Наличие | Детали |
-|-----------|---------|--------|
-| CI/CD | {✅/❌} | {GitHub Actions / GitLab CI} |
-| Docker | {✅/❌} | {N сервисов в compose} |
-| DB | {✅/❌} | {MySQL / PostgreSQL / MongoDB} |
-| Migrations | {✅/❌} | {Liquibase / goose}, {N changesets} |
-| Message Queue | {✅/❌} | {Kafka / RabbitMQ / NATS} |
-| Cache | {✅/❌} | {Redis / Memcached} |
-| Dev-Platform | {✅/❌} | {shared services} |
-
-## 6. AI Setup Status
-
-| Файл | Статус |
-|------|--------|
-| CLAUDE.md | {✅ есть / ❌ нет} |
-| qa_agent.md | {✅ / ❌} |
-| Skills | {N скиллов: список / ❌} |
-| .agents/ | {✅ / ❌} |
-| .cursor/rules/ | {✅ / ❌} |
-
-## 7. Readiness Assessment
-
-| Критерий | Статус | Комментарий |
-|----------|--------|-------------|
-| API Specs | {🟢 Complete / 🟡 Partial / 🔴 Missing} | {детали} |
-| Test Infrastructure | {🟢 Ready / 🟡 Needs Setup / 🔴 Missing} | {детали} |
-| Documentation | {🟢 / 🟡 / 🔴} | {детали} |
-| AI Setup | {🟢 / 🟡 / 🔴} | {детали} |
-
-### Blockers
-
-{Список блокеров или "Нет блокеров"}
-
-### Рекомендуемый следующий шаг
-
-{Конкретная рекомендация: /test-plan, /init-project, "получить спецификацию от команды" и т.д.}
-```
+**Обязательные секции:**
+1. Repository Profile (module, Go version, service type, dependencies)
+2. API Surface Catalog (REST + gRPC endpoints с Summary)
+3. Specification Inventory (coverage формула)
+4. Existing Test Coverage (unit/integration/e2e)
+5. Infrastructure (CI/CD, Docker, DB, Migrations, Queue, Cache)
+6. AI Setup Status (CLAUDE.md, qa_agent.md, skills)
+7. Readiness Assessment (specs, tests, docs, AI setup + blockers + next step)
 
 ## Quality Gates
 
@@ -321,7 +250,7 @@ Glob: **/*.http, **/api.http
 
 ## Завершение
 
-После сохранения `audit/repo-scout-report.md` — напечатай блок `SKILL COMPLETE` (формат в qa_agent.md).
+После сохранения `audit/repo-scout-report.md` — напечатай блок `SKILL COMPLETE` (формат в qa_agent.md § Skill Completion Protocol).
 
 Self-Review для этого скилла **не генерируется** (read-only сканирование, не генерация контента).
 

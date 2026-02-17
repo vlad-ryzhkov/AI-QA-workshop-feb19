@@ -29,3 +29,22 @@ build/
 
 # IDE (user-specific)
 .idea/workspace.xml
+
+# Backup files
+*.bak
+
+# Test reports
+allure-results/
+
+# Audit results
+audit/
+specifications-audit/
+
+# Workshop output dirs (keep folders, ignore content)
+src/test/testCases/**
+!src/test/testCases/.gitkeep
+src/test/kotlin/rawResults/**
+!src/test/kotlin/rawResults/.gitkeep
+
+# IDE (full ignore)
+.idea/

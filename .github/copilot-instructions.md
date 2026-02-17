@@ -1,58 +1,48 @@
 # AI QA Workshop — Copilot Instructions
 
+# INSTRUCTIONS FOR GITHUB COPILOT
+
+ALWAYS prioritize the context defined in `CLAUDE.md` and `.claude/qa_agent.md`.
+If the user asks for a specific task (like "analyze" or "test"), **YOU MUST** ask them to open the corresponding SKILL file if it is not already in the context.
+
 ## Context
 - **Проект:** Mobile/Backend QA Automation Workshop
 - **Роль:** Senior QA Automation Engineer
 - **Языки:** Kotlin, Markdown
 - **Документация:** на русском языке
 
-## Tech Stack (LOCKED)
-
-| Компонент | Технология | BANNED |
-|-----------|------------|--------|
-| HTTP Client | Ktor Client (CIO) | Retrofit, OkHttp |
-| Serialization | Jackson (SNAKE_CASE) | Gson, Moshi |
-| Assertions | Kotest (`shouldBe`) | JUnit assertEquals |
-| Test Framework | JUnit 5 | TestNG |
-| Reporting | Allure | — |
-
-## Core Principles
-1. **Trust No One** — проверяй требования на противоречия
-2. **Production Ready** — код компилируется без правок
-3. **Safety** — деструктивные команды только с подтверждением
-4. **Security First** — любое поле ввода = потенциальная SQL Injection, XSS, IDOR
-5. **Complete Coverage** — каждый метод TestData используется минимум в 1 тесте
+> **Tech Stack, Core Principles, Safety Protocols:** см. `CLAUDE.md` в корне репозитория (SSOT)
 
 ## Anti-Patterns (BANNED)
 
 | Проблема | Что делать вместо |
 |----------|-------------------|
-| `Thread.sleep()` в тестах | Polling с таймаутом |
+| `Thread.sleep()` в тестах | Polling с таймаутом (Awaitility) |
 | `Map<String, Any>` для API | Типизированные DTO с `@JsonNaming(SnakeCaseStrategy::class)` |
 | HTTP-вызовы прямо в тесте | Слой Client (абстракция) |
 | PII в тестовых данных | Faker или маскированные значения |
-| Assertion без сообщения | `shouldBe` с описанием контекста |
+| Assertion без сообщения | `assertEquals` с описанием контекста |
 
-## Skills (инструкции для задач)
+## Skills (Как применять)
 
-| Skill | Файл | Назначение |
-|-------|------|------------|
-| `/analyze` | `.claude/skills/requirements-analysis/SKILL.md` | QA-аудит требований |
-| `/testcases` | `.claude/skills/testcases/SKILL.md` | Мануальные тест-кейсы (Kotlin DSL) |
-| `/api-tests` | `.claude/skills/api-tests/SKILL.md` | API автотесты (Ktor + Kotest) |
-| `/screenshot-analyze` | `.claude/skills/screenshot-analyze/SKILL.md` | L10N и UI дефекты |
+GitHub Copilot не читает инструкции автоматически. Чтобы выполнить задачу:
 
-**Workflow:** `/analyze` -> `/testcases` -> `/api-tests`
+1. **Аудит спецификации:**
+   - Напиши в чат: `@workspace Прочитай .claude/skills/spec-audit/SKILL.md и выполни аудит для файла specifications/api.yaml`
 
-> VS Code Copilot нативно читает `.claude/skills/` — skills доступны автоматически.
-> IntelliJ Copilot: откройте нужный SKILL.md в редакторе для контекста.
+2. **Генерация тестов:**
+   - Открой файл `src/test/kotlin/MyTest.kt`
+   - Открой файл `.claude/skills/api-tests/SKILL.md`
+   - Напиши: "Сгенерируй тесты на основе открытого SKILL файла"
 
-## Safety Protocols
+| Команда (alias) | Какой файл подключить в контекст | Назначение |
+|-----------------|----------------------------------|------------|
+| Spec Audit      | `.claude/skills/spec-audit/SKILL.md` | QA-аудит спецификации |
+| Тест-кейсы      | `.claude/skills/testcases/SKILL.md` | Мануальные тест-кейсы (Kotlin DSL) |
+| API Тесты       | `.claude/skills/api-tests/SKILL.md` | API автотесты (Ktor + JUnit 5) |
+| Screenshot      | `.claude/skills/screenshot-analyze/SKILL.md` | L10N и UI дефекты |
 
-- **FORBIDDEN:** `git reset --hard`, `git clean -fd`, удаление веток, `rm -rf .git`
-- **MANDATORY:** Backup перед деструктивными операциями
-- Подтверждай ветку перед `git push`
-- `./gradlew compileTestKotlin` перед коммитом автотестов
+**Workflow:** Аудит → Тест-кейсы → API Тесты
 
 ## Project Structure
 

@@ -18,9 +18,9 @@
 
 | Компонент | Технология | BANNED |
 |-----------|------------|--------|
-| HTTP Client | [Ktor/requests/axios] | [alternatives] |
+| HTTP Client | [common-test-libs ApiClient/requests/axios] | [alternatives] |
 | Serialization | [Jackson/Pydantic/zod] | [alternatives] |
-| Assertions | [Kotest/pytest/Jest] | [alternatives] |
+| Assertions | [assertEquals с message/pytest/Jest] | [alternatives] |
 | Test Framework | [JUnit 5/pytest/Jest] | [alternatives] |
 | Reporting | [Allure] | — |
 
@@ -62,10 +62,12 @@
 ```
 | Компонент | Технология | BANNED |
 |-----------|------------|--------|
-| HTTP | Ktor Client (CIO) | Retrofit, OkHttp |
+| HTTP | common-test-libs ApiClient + ApiRequestBaseJson<T> | Custom HTTP wrappers |
 | JSON | Jackson (SNAKE_CASE) | Gson |
-| Assertions | Kotest shouldBe | assertEquals |
+| Assertions | assertEquals с message + Hamcrest checkAll | Assertions без message |
+| Polling | Awaitility (await.atMost().until {}) | Thread.sleep(), delay() |
 | Framework | JUnit 5 | TestNG |
+| Code Style | ktlint | — |
 ```
 
 ### Python

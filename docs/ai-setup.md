@@ -1,5 +1,44 @@
 # AI-конфигурация проекта
 
+## Table of Contents
+
+  - [Структура проекта](#структура-проекта)
+  - [Корневые конфигурационные файлы](#корневые-конфигурационные-файлы)
+  - [Скиллы](#скиллы)
+  - [Анти-паттерны (shared)](#анти-паттерны-shared)
+  - [Reference-файлы](#reference-файлы)
+  - [Агенты](#агенты)
+  - [Hooks](#hooks)
+  - [Документация](#документация)
+  - [1. Three-Layer AI Context](#1-three-layer-ai-context)
+  - [2. Progressive Disclosure](#2-progressive-disclosure)
+  - [3. Self-Review Protocol](#3-self-review-protocol)
+  - [4. 4-Layer Test Architecture](#4-4-layer-test-architecture)
+  - [5. Anti-Pattern Library](#5-anti-pattern-library)
+  - [6. Locked Tech Stack + BANNED](#6-locked-tech-stack-banned)
+  - [7. Token Economy](#7-token-economy)
+  - [8. Safety Protocols](#8-safety-protocols)
+  - [9. Cross-Skill Pipeline](#9-cross-skill-pipeline)
+  - [10. Compilation Gate](#10-compilation-gate)
+  - [11. Traceability](#11-traceability)
+  - [12. Security-First Mindset](#12-security-first-mindset)
+  - [13. Meta-Skills Bootstrap](#13-meta-skills-bootstrap)
+  - [14. Plugin: claude-md-management](#14-plugin-claude-md-management)
+  - [15. Skill Size Limit](#15-skill-size-limit)
+  - [16. Cross-IDE Compatibility](#16-cross-ide-compatibility)
+  - [17. Workshop Checkpoint Branches](#17-workshop-checkpoint-branches)
+  - [18. MCP Integration](#18-mcp-integration)
+  - [19. CI/CD PR Review](#19-cicd-pr-review)
+  - [20. Markdown Lint](#20-markdown-lint)
+  - [Цикл непрерывного улучшения](#цикл-непрерывного-улучшения)
+  - [Quality Gates](#quality-gates)
+  - [10 механизмов самоулучшения](#10-механизмов-самоулучшения)
+  - [Tech Stack (LOCKED)](#tech-stack-locked)
+  - [Build](#build)
+  - [Плагины](#плагины)
+  - [MCP серверы](#mcp-серверы)
+  - [IDE-специфичные конфиги](#ide-специфичные-конфиги)
+
 > Реестр AI-паттернов, файлов и решений этого проекта.
 > Обновляется через `/update-ai-setup`.
 
@@ -9,10 +48,10 @@
 
 ```
 ┌─────────────────────────────────────────┐
-│  Уровень 1: CLAUDE.md (99 строк)        │  ← Всегда в контексте
+│  Уровень 1: CLAUDE.md (98 строк)        │  ← Всегда в контексте
 │  Tech Stack, Safety, Skills, Conventions│
 ├─────────────────────────────────────────┤
-│  Уровень 2: qa_agent.md (194 строки)    │  ← При вызове любого skill
+│  Уровень 2: qa_agent.md (144 строки)    │  ← При вызове любого skill
 │  Mindset, Anti-Patterns, Protocols      │
 ├─────────────────────────────────────────┤
 │  Уровень 3: SKILL.md + references/      │  ← При активации конкретного skill
@@ -24,77 +63,168 @@ AI загружает только нужный слой — экономия т
 
 ## Инвентаризация файлов
 
+### Структура проекта
+
+```
+.
+├── CLAUDE.md                        # Project Passport — главный контекст для AI
+├── README.md                        # Документация проекта
+├── .mcp.json                        # MCP серверы: context7, sequential-thinking
+│
+├── .claude/                         # Конфигурация Claude Code
+│   ├── qa_agent.md                  # Core Mindset + Anti-Patterns
+│   │
+│   │   Routing:
+│   │   qa_agent.md (Оркестратор)
+│   │     ├── agents/sdet.md      →  /testcases, /api-tests, /init-skill
+│   │     └── agents/auditor.md   →  /test-plan, /output-review, /skill-audit, /doc-lint, /screenshot-analyze
+│   │
+│   ├── protocols/                   # Протоколы поведения агентов
+│   │   └── gardener.md              # 🌱 Интерфейс проактивных улучшений
+│   ├── settings.json                # Плагины, permissions, hooks
+│   ├── agents/                      # Role-specific агенты
+│   │   ├── sdet.md
+│   │   └── auditor.md
+│   ├── hooks/                       # PostToolUse hooks
+│   │   └── skill-lint.sh
+│   ├── qa-antipatterns/             # Shared анти-паттерны (21 файл)
+│   ├── references/                  # Shared шаблоны
+│   │   ├── claude-md-template.md
+│   │   ├── qa-agent-template.md
+│   │   └── skill-template.md
+│   └── skills/                      # Навыки (13 skills)
+│       ├── spec-audit/              # /spec-audit — QA-аудит требований
+│       ├── testcases/               # /testcases — генерация тест-кейсов
+│       ├── api-tests/               # /api-tests — API автотесты
+│       ├── screenshot-analyze/      # /screenshot-analyze — L10n UI аудит
+│       ├── repo-scout/              # /repo-scout — разведка бэкенд-репо
+│       ├── test-plan/               # /test-plan — план тестового покрытия
+│       ├── init-project/            # /init-project — генерация CLAUDE.md
+│       ├── init-agent/              # /init-agent — генерация qa_agent.md
+│       ├── init-skill/              # /init-skill — генерация нового skill
+│       ├── doc-lint/                # /doc-lint — аудит документации
+│       ├── update-ai-setup/         # /update-ai-setup — обновление реестра
+│       ├── output-review/           # /output-review — аудит результата скилла
+│       └── skill-audit/             # /skill-audit — аудит SKILL.md
+│
+├── docs/                            # Документация
+│   ├── ai-files-handbook.md         # Гайд по созданию AI-файлов
+│   └── ai-setup.md                  # Реестр AI-конфигурации
+│
+├── specifications/                  # Спецификации API для анализа
+│
+├── src/test/
+│   ├── testCases/                   # Мануальные тесты (Kotlin DSL)
+│   ├── kotlin/                      # API автотесты
+│   └── resources/screenshots/       # Скриншоты для L10n анализа
+│
+├── audit/                           # Результаты аудита требований
+└── rtl-example/                     # Пример RTL верстки
+```
+
 ### Корневые конфигурационные файлы
 
 | Файл | Путь | Строк | Назначение |
 |------|------|------:|------------|
-| CLAUDE.md | `CLAUDE.md` | 99 | Главный онбординг: стек, безопасность, конвенции |
-| QA Agent | `.claude/qa_agent.md` | 194 | Mindset, анти-паттерны, Cross-Skill Protocol |
-| Settings | `.claude/settings.json` | 5 | Плагин claude-md-management |
-| MCP Servers | `.mcp.json` | 11 | context7 + sequential-thinking |
+| CLAUDE.md | `CLAUDE.md` | 98 | Главный онбординг: стек, безопасность, конвенции |
+| QA Agent | `.claude/qa_agent.md` | 144 | Mindset, анти-паттерны, Cross-Skill Protocol |
+| Gardener Protocol | `.claude/protocols/gardener.md` | 37 | Интерфейс проактивных улучшений (Dependency Injection) |
+| Settings | `.claude/settings.json` | 49 | Плагины, permissions, hooks |
+| MCP Servers | `.mcp.json` | 12 | context7 + sequential-thinking |
 | Markdownlint | `.markdownlint.yaml` | 38 | Правила линтинга markdown |
 
 ### Скиллы
 
 | Скилл | Путь | Строк | Категория | Триггер |
 |-------|------|------:|-----------|---------|
-| `/analyze` | `.claude/skills/requirements-analysis/SKILL.md` | 154 | Analysis | QA-аудит требований |
-| `/testcases` | `.claude/skills/testcases/SKILL.md` | 242 | Generation | Мануальные тест-кейсы |
-| `/api-tests` | `.claude/skills/api-tests/SKILL.md` | 478 | Generation | API автотесты (Ktor + Kotest) |
-| `/screenshot-analyze` | `.claude/skills/screenshot-analyze/SKILL.md` | 337 | Analysis | L10N и UI дефекты |
-| `/init-project` | `.claude/skills/init-project-claudemd/SKILL.md` | 160 | Meta | Генерация CLAUDE.md |
-| `/init-agent` | `.claude/skills/init-agent/SKILL.md` | 208 | Meta | Генерация qa_agent.md |
-| `/init-skill` | `.claude/skills/init-skill/SKILL.md` | 435 | Meta | Генерация нового skill |
-| `/doc-lint` | `.claude/skills/human-doc-lint/SKILL.md` | 362 | Analysis | Аудит качества документации |
-| `/update-ai-setup` | `.claude/skills/update-ai-setup/SKILL.md` | — | Meta | Обновление этого реестра |
+| `/api-tests` | `.claude/skills/api-tests/SKILL.md` | 207 | Generation | API автотесты (common-test-libs + JUnit 5) |
+| `/doc-lint` | `.claude/skills/doc-lint/SKILL.md` | 249 | Analysis | Аудит качества документации |
+| `/init-agent` | `.claude/skills/init-agent/SKILL.md` | 185 | Meta | Генерация qa_agent.md |
+| `/init-project` | `.claude/skills/init-project/SKILL.md` | 128 | Meta | Генерация CLAUDE.md |
+| `/init-skill` | `.claude/skills/init-skill/SKILL.md` | 283 | Meta | Генерация нового skill |
+| `/output-review` | `.claude/skills/output-review/SKILL.md` | 298 | Analysis | Аудит результата скилла |
+| `/repo-scout` | `.claude/skills/repo-scout/SKILL.md` | 270 | Analysis | Разведка бэкенд-репо |
+| `/screenshot-analyze` | `.claude/skills/screenshot-analyze/SKILL.md` | 323 | Analysis | L10N и UI дефекты |
+| `/skill-audit` | `.claude/skills/skill-audit/SKILL.md` | 208 | Analysis | Аудит SKILL.md |
+| `/spec-audit` | `.claude/skills/spec-audit/SKILL.md` | 85 | Analysis | QA-аудит требований |
+| `/test-plan` | `.claude/skills/test-plan/SKILL.md` | 218 | Analysis | План тестового покрытия |
+| `/testcases` | `.claude/skills/testcases/SKILL.md` | 88 | Generation | Мануальные тест-кейсы |
+| `/update-ai-setup` | `.claude/skills/update-ai-setup/SKILL.md` | 197 | Meta | Обновление этого реестра |
 
 ### Анти-паттерны (shared)
 
 | Файл | Путь | Строк | Для скиллов |
 |------|------|------:|-------------|
-| flaky-sleep-tests | `.claude/qa-antipatterns/flaky-sleep-tests.md` | 50 | /api-tests |
-| no-cleanup-pattern | `.claude/qa-antipatterns/no-cleanup-pattern.md` | 66 | /api-tests |
-| map-instead-of-dto | `.claude/qa-antipatterns/map-instead-of-dto.md` | 61 | /api-tests |
-| no-abstraction-layer | `.claude/qa-antipatterns/no-abstraction-layer.md` | 71 | /api-tests |
-| assertion-without-message | `.claude/qa-antipatterns/assertion-without-message.md` | 72 | /api-tests |
-| static-object-mother | `.claude/qa-antipatterns/static-object-mother.md` | 90 | /api-tests |
-| pii-literals-in-code | `.claude/qa-antipatterns/pii-literals-in-code.md` | 102 | /api-tests |
+| _index | `.claude/qa-antipatterns/_index.md` | 53 | Все |
+| assertion-without-message | `.claude/qa-antipatterns/assertion-without-message.md` | 76 | /api-tests |
+| configure-http-client | `.claude/qa-antipatterns/configure-http-client.md` | 53 | /api-tests |
+| controlled-retries | `.claude/qa-antipatterns/controlled-retries.md` | 57 | /api-tests |
+| coroutine-test-return-type | `.claude/qa-antipatterns/coroutine-test-return-type.md` | 79 | /api-tests |
+| flaky-sleep-tests | `.claude/qa-antipatterns/flaky-sleep-tests.md` | 57 | /api-tests |
 | hardcoded-test-data | `.claude/qa-antipatterns/hardcoded-test-data.md` | 64 | /testcases |
+| information-leakage-in-errors | `.claude/qa-antipatterns/information-leakage-in-errors.md` | 91 | /api-tests |
+| junit-test-initialization | `.claude/qa-antipatterns/junit-test-initialization.md` | 57 | /api-tests |
+| map-instead-of-dto | `.claude/qa-antipatterns/map-instead-of-dto.md` | 61 | /api-tests |
+| missing-content-type-validation | `.claude/qa-antipatterns/missing-content-type-validation.md` | 61 | /api-tests |
+| no-abstraction-layer | `.claude/qa-antipatterns/no-abstraction-layer.md` | 64 | /api-tests |
+| no-cleanup-pattern | `.claude/qa-antipatterns/no-cleanup-pattern.md` | 95 | /api-tests |
+| no-hardcoded-timeouts | `.claude/qa-antipatterns/no-hardcoded-timeouts.md` | 48 | /api-tests |
+| no-order-dependent-tests | `.claude/qa-antipatterns/no-order-dependent-tests.md` | 70 | /api-tests |
+| no-sensitive-data-logging | `.claude/qa-antipatterns/no-sensitive-data-logging.md` | 53 | /api-tests |
+| no-shared-mutable-state | `.claude/qa-antipatterns/no-shared-mutable-state.md` | 76 | /api-tests |
 | pii-in-test-data | `.claude/qa-antipatterns/pii-in-test-data.md` | 63 | /testcases |
+| pii-literals-in-code | `.claude/qa-antipatterns/pii-literals-in-code.md` | 102 | /api-tests |
+| static-object-mother | `.claude/qa-antipatterns/static-object-mother.md` | 90 | /api-tests |
+| wrap-infrastructure-errors | `.claude/qa-antipatterns/wrap-infrastructure-errors.md` | 60 | /api-tests |
 
 ### Reference-файлы
 
 | Файл | Путь | Строк | Назначение |
 |------|------|------:|------------|
-| claude-md-template | `.claude/references/claude-md-template.md` | 104 | Шаблон CLAUDE.md |
-| qa-agent-template | `.claude/references/qa-agent-template.md` | 103 | Шаблон qa_agent.md |
-| skill-template | `.claude/references/skill-template.md` | 143 | Шаблон SKILL.md |
-| cldr-tables | `.claude/skills/screenshot-analyze/references/cldr-tables.md` | 151 | CLDR справочники |
+| claude-md-template | `.claude/references/claude-md-template.md` | 106 | Шаблон CLAUDE.md (shared) |
+| qa-agent-template | `.claude/references/qa-agent-template.md` | 103 | Шаблон qa_agent.md (shared) |
+| skill-template | `.claude/references/skill-template.md` | 143 | Шаблон SKILL.md (shared) |
+| api-patterns | `.claude/skills/api-tests/references/api-patterns.md` | 30 | Паттерны для API-тестов |
+| examples | `.claude/skills/api-tests/references/examples.md` | 68 | Примеры кода для /api-tests |
+| best-practices | `.claude/skills/doc-lint/references/best-practices.md` | 82 | Корпоративные практики документирования |
+| check-rules | `.claude/skills/doc-lint/references/check-rules.md` | 110 | Пороги, сигнатуры дубликатов, SSOT-матрица |
+| phases | `.claude/skills/doc-lint/references/phases.md` | 227 | Фазы и алгоритм выполнения для /doc-lint |
+| qa-agent-template | `.claude/skills/init-agent/references/qa-agent-template.md` | 103 | Шаблон qa_agent.md |
+| qa-profiles | `.claude/skills/init-agent/references/qa-profiles.md` | 128 | Профили QA-агентов |
+| claude-md-template | `.claude/skills/init-project/references/claude-md-template.md` | 116 | Шаблон CLAUDE.md |
+| validation-checklist | `.claude/skills/init-skill/references/validation-checklist.md` | 39 | Чек-лист валидации для /init-skill |
+| yaml-reference | `.claude/skills/init-skill/references/yaml-reference.md` | 91 | YAML-спецификация skill |
+| interaction-guide | `.claude/skills/init-skill/references/interaction-guide.md` | 95 | Гайд по интерактивному workflow для /init-skill |
+| lang-patterns | `.claude/skills/repo-scout/references/lang-patterns.md` | 93 | Языковые паттерны для /repo-scout |
+| report-template | `.claude/skills/repo-scout/references/report-template.md` | 101 | Шаблон отчёта для /repo-scout |
 | checklists | `.claude/skills/screenshot-analyze/references/checklists.md` | 113 | Чек-листы L10N проверок |
-| html-template | `.claude/skills/screenshot-analyze/references/html-template.md` | 163 | HTML шаблон отчёта |
-| check-rules | `.claude/skills/human-doc-lint/references/check-rules.md` | 108 | Пороги, сигнатуры дубликатов, SSOT-матрица |
-| best-practices | `.claude/skills/human-doc-lint/references/best-practices.md` | 82 | Корпоративные практики документирования |
+| cldr-tables | `.claude/skills/screenshot-analyze/references/cldr-tables.md` | 151 | CLDR справочники |
+| html-template | `.claude/skills/screenshot-analyze/references/html-template.md` | 160 | HTML шаблон отчёта |
+| l10n-domain-rules | `.claude/skills/screenshot-analyze/references/l10n-domain-rules.md` | 41 | Правила локализации доменов |
+| lqa-rules | `.claude/skills/screenshot-analyze/references/lqa-rules.md` | 42 | Правила LQA-проверок для /screenshot-analyze |
+| priority-model | `.claude/skills/test-plan/references/priority-model.md` | 22 | Модель приоритизации для /test-plan |
+| report-template | `.claude/skills/test-plan/references/report-template.md` | 120 | Шаблон отчёта для /test-plan |
+
+### Агенты
+
+| Файл | Путь | Строк | Роль |
+|------|------|------:|------|
+| auditor | `.claude/agents/auditor.md` | 148 | Планирование + аудит качества |
+| sdet | `.claude/agents/sdet.md` | 180 | Генерация тестового кода |
+
+### Hooks
+
+| Файл | Путь | Строк | Триггер | Назначение |
+|------|------|------:|---------|------------|
+| skill-lint.sh | `.claude/hooks/skill-lint.sh` | 48 | PostToolUse (Write/Edit) | Валидация SKILL.md при редактировании |
 
 ### Документация
 
 | Файл | Путь | Строк | Назначение |
 |------|------|------:|------------|
-| AI Files Handbook | `docs/ai-files-handbook.md` | 654 | Гайд по созданию AI-файлов |
-| AI Setup (этот файл) | `docs/ai-setup.md` | — | Реестр AI-конфигурации |
-
-### Кросс-IDE конфиги
-
-| Файл | Путь | Назначение |
-|------|------|------------|
-| Cursor wrapper: project | `.cursor/rules/00-project-context.mdc` | `@CLAUDE.md` — alwaysApply |
-| Cursor wrapper: agent | `.cursor/rules/01-qa-agent.mdc` | `@.claude/qa_agent.md` |
-| Cursor wrapper: analyze | `.cursor/rules/02-skill-analyze.mdc` | `@.claude/skills/requirements-analysis/SKILL.md` |
-| Cursor wrapper: testcases | `.cursor/rules/03-skill-testcases.mdc` | `@.claude/skills/testcases/SKILL.md` |
-| Cursor wrapper: api-tests | `.cursor/rules/04-skill-api-tests.mdc` | `@.claude/skills/api-tests/SKILL.md` |
-| Cursor wrapper: screenshot | `.cursor/rules/05-skill-screenshot.mdc` | `@.claude/skills/screenshot-analyze/SKILL.md` |
-| Copilot Instructions | `.github/copilot-instructions.md` | Краткий контекст для VS Code / IntelliJ Copilot |
-| Claude PR Review | `.github/workflows/claude_review.yml` | CI/CD review через Claude на PR |
-| AGENTS.md | `AGENTS.md` | Pointer для Zed, Cline, Continue.dev |
+| AI Files Handbook | `docs/ai-files-handbook.md` | 465 | Гайд по созданию AI-файлов |
+| AI Setup (этот файл) | `docs/ai-setup.md` | 446 | Реестр AI-конфигурации |
+| Audit History | `audit/audit-history.md` | 8 | Append-only лог аудитов (/output-review, /skill-audit, /doc-lint) |
 
 ## Каталог паттернов
 
@@ -115,8 +245,8 @@ Models → Client → Data → Tests. Разделение ответствен�
 → Реализация: `.claude/skills/api-tests/SKILL.md` (секция Алгоритм)
 
 ### 5. Anti-Pattern Library
-9 анти-паттернов в shared-директории `.claude/qa-antipatterns/`, ссылки из qa_agent.md.
-→ Реализация: `.claude/qa-antipatterns/*.md`, `.claude/qa_agent.md:101-129`
+21 анти-паттерн в shared-директории `.claude/qa-antipatterns/`, ссылки из qa_agent.md.
+→ Реализация: `.claude/qa-antipatterns/*.md`, `.claude/qa_agent.md`
 
 ### 6. Locked Tech Stack + BANNED
 Фиксированный стек (Ktor, Jackson, Kotest, JUnit 5, Allure) с явным списком запрещённых альтернатив.
@@ -131,7 +261,7 @@ FORBIDDEN-команды, DESTROY-override, обязательный backup пе
 → Реализация: `CLAUDE.md:32-36`
 
 ### 9. Cross-Skill Pipeline
-Последовательный workflow: `/analyze` → `/testcases` → `/api-tests`. Каждый skill учитывает upstream-артефакты.
+Последовательный workflow: `/spec-audit` → `/testcases` → `/api-tests`. Каждый skill учитывает upstream-артефакты.
 → Реализация: `.claude/qa_agent.md:131-154`
 
 ### 10. Compilation Gate
@@ -148,7 +278,7 @@ OWASP, PII-проверки, SQL Injection, XSS, IDOR — встроены в mi
 
 ### 13. Meta-Skills Bootstrap
 Три мета-скилла для создания AI-конфигурации: `/init-project`, `/init-agent`, `/init-skill`.
-→ Реализация: `.claude/skills/init-project-claudemd/`, `.claude/skills/init-agent/`, `.claude/skills/init-skill/`
+→ Реализация: `.claude/skills/init-project/`, `.claude/skills/init-agent/`, `.claude/skills/init-skill/`
 
 ### 14. Plugin: claude-md-management
 Плагин для аудита и улучшения CLAUDE.md. Включён в `.claude/settings.json`.
@@ -178,15 +308,70 @@ GitHub Actions workflow для автоматического code review чер
 Автоматическая проверка качества markdown-документации. Selective rules: headings, code blocks, tables, whitespace.
 → Реализация: `.markdownlint.yaml`
 
+### 21. Dependency Injection (Gardener)
+Агенты (sdet, auditor) не просто запускают скиллы, а инъектируют в них протокол `.claude/protocols/gardener.md` во время выполнения. Механика: runtime-подключение контекста без увеличения базового промпта. Результат: AI работает в режиме Co-Pilot — выполняет задачу + предлагает улучшения (🌱) по архитектуре/безопасности, не блокируя основной поток (в отличие от `/output-review`, который работает пост-фактум).
+→ Реализация: `.claude/protocols/gardener.md`, `.claude/agents/auditor.md` (секция Protocol Injection)
+
+## Feedback Loop
+
+### Цикл непрерывного улучшения
+
+```
+┌─────────────┐     ┌───────────┐     ┌───────────┐     ┌─────────┐
+│  Discovery  │────▶│ Strategy  │────▶│ Execution │────▶│  Audit  │
+│ /repo-scout │     │ /test-plan│     │ /api-tests│     │ /output-│
+│ /spec-audit │     │           │     │ /testcases│     │  review │
+└─────────────┘     └───────────┘     └───────────┘     └────┬────┘
+       ▲                                                      │
+       │            ┌──────────────────────┐                  │
+       │            │  Gardener Protocol   │                  │
+       └────────────│  ошибка → правило →  │◀─────────────────┘
+                    │  предотвращение      │
+                    └──────────┬───────────┘
+                               │ обновляет
+                               ▼
+                    ┌──────────────────────┐
+                    │ qa-antipatterns/     │
+                    │ skills/*/SKILL.md    │
+                    │ agents/*.md          │
+                    │ CLAUDE.md            │
+                    └──────────────────────┘
+```
+
+**Ключевой принцип:** Писатель ≠ Проверяющий. 4 агента с разделением ответственности — zero rubber-stamping.
+
+### Quality Gates
+
+| Переход | Что проверяется | Блокер |
+|---------|-----------------|--------|
+| Plan → Execution | Покрытие endpoints, приоритеты, gaps в спеках | Пропущены Critical endpoints |
+| Execution → Done | Компиляция, `@Link` на спеку, coverage vs план | `compileTestKotlin` fail (max 3 retry) |
+| Audit → Accept | Scorecard: `(PASS + PARTIAL×0.5) / (PASS + PARTIAL×0.5 + FAIL) × 100` | Score < 70% → ревизия |
+
+### 10 механизмов самоулучшения
+
+| # | Механизм | Что делает |
+|---|----------|------------|
+| 1 | **Multi-Agent Orchestration** | 4 агента (Architect, SDET, Auditor, L10N) + оркестратор `qa_agent.md` |
+| 2 | **Output Review** | Scorecard по чек-листу SKILL.md: `(PASS + PARTIAL×0.5) / TOTAL × 100` |
+| 3 | **Doc-Lint** | Cross-file дубликаты, нарушения SSOT, health score: `100 - (CRIT×15) - (WARN×5) - (INFO×1)` |
+| 4 | **Skill-Audit** | 9 проверок: раздутость, waste-секции, дублирование, вредные паттерны |
+| 5 | **AI Registry Sync** | Delta-обновление `docs/ai-setup.md` — реестр всех AI-файлов проекта |
+| 6 | **Real-Time Hook** | `skill-lint.sh` на PostToolUse — валидация SKILL.md при каждом редактировании |
+| 7 | **Gardener Protocol** | In-process Consult: агент замечает "запахи" кода/архитектуры во время работы → выдаёт 🌱 Suggestion, не блокируя основной поток; найденная ошибка → новое правило в antipatterns/SKILL.md/CLAUDE.md |
+| 8 | **Anti-Pattern Library** | 21 паттерн в `.claude/qa-antipatterns/` — reference-driven проверки |
+| 9 | **CLAUDE.md Plugin** | `/revise-claude-md` и `/claude-md-improver` — обновление project passport |
+| 10 | **Segregation of Duties** | Architect планирует, SDET кодит, Auditor проверяет — никто не проверяет сам себя |
+
 ## Стек и плагины
 
 ### Tech Stack (LOCKED)
 
 | Компонент | Технология | BANNED |
 |-----------|------------|--------|
-| HTTP Client | Ktor Client (CIO) | Retrofit, OkHttp |
+| HTTP Client | common-test-libs ApiClient + `ApiRequestBaseJson<T>` | Custom HTTP wrappers |
 | Serialization | Jackson (SNAKE_CASE) | Gson, Moshi |
-| Assertions | Kotest (`shouldBe`) | JUnit assertEquals |
+| Assertions | JUnit 5 (`assertEquals` с message) + Hamcrest `checkAll` | Assertions без message |
 | Test Framework | JUnit 5 | TestNG |
 | Reporting | Allure | — |
 
@@ -198,11 +383,19 @@ GitHub Actions workflow для автоматического code review чер
 | JVM | 17 |
 | Gradle | 9.2.1 |
 
-### Плагин
+### Плагины
 
-| Плагин | Статус | Назначение |
-|--------|--------|------------|
-| claude-md-management | Включён | Аудит и улучшение CLAUDE.md |
+| Плагин | Пакет | Статус | Назначение |
+|--------|-------|--------|------------|
+| claude-md-management | claude-plugins-official | Включён | Аудит и улучшение CLAUDE.md |
+| kotlin-lsp | claude-plugins-official | Выключен | Kotlin LSP для навигации и анализа кода |
+
+### MCP серверы
+
+| Сервер | Пакет | Назначение |
+|--------|-------|------------|
+| context7 | @upstash/context7-mcp@latest | Актуальная документация библиотек |
+| sequential-thinking | @modelcontextprotocol/server-sequential-thinking | Пошаговый анализ сложных задач |
 
 ## Безопасность и управление
 
@@ -230,16 +423,32 @@ GitHub Actions workflow для автоматического code review чер
 
 ### IDE-специфичные конфиги
 
-| Файл | IDE | Тип |
-|------|-----|-----|
-| `.cursor/rules/*.mdc` (6 файлов) | Cursor | Thin wrappers с `@file` ссылками |
-| `.github/copilot-instructions.md` | VS Code Copilot, IntelliJ Copilot | Самодостаточный краткий контекст |
-| `AGENTS.md` | Zed, Cline, Continue.dev | Pointer-файл с ссылками |
+| Файл | Путь | Назначение |
+|------|------|------------|
+| Cursor wrappers (6 шт.) | `.cursor/rules/*.mdc` | Thin wrappers с `@file` ссылками |
+| Copilot Instructions | `.github/copilot-instructions.md` | Краткий контекст для VS Code / IntelliJ Copilot |
+| Claude PR Review | `.github/workflows/claude_review.yml` | CI/CD review через Claude на PR |
+| AGENTS.md | `AGENTS.md` | Pointer для Zed, Cline, Continue.dev |
+
+## Health Metrics
+
+> Источник: `audit/audit-history.md`. Обновляется через `/update-ai-setup`.
+
+| Аудитор | Последний запуск | Score | CRIT | WARN | Тренд |
+|---------|-----------------|------:|:----:|:----:|:-----:|
+| /output-review | — | — | — | — | — |
+| /skill-audit | 2026-02-17 | — | 2 | 6 | ↓ |
+| /doc-lint | 2026-02-17 | 95/100 | 0 | 1 | → |
 
 ## Changelog
 
 | Дата | Изменение |
 |------|-----------|
+| 2026-02-18 | Gardener Protocol: protocols/ в структуре дерева, строка в таблице конфигов, паттерн #21 Dependency Injection, обновлён механизм #7 в таблице самоулучшения |
+| 2026-02-18 | Синхронизация: +5 references (phases, report-template×2, lqa-rules, interaction-guide), строки qa_agent.md (223→144), doc-lint (402→249), init-skill (433→283), repo-scout (363→270), test-plan (418→218), Health Metrics skill-audit CRIT/WARN из audit-history |
+| 2026-02-17 | Синхронизация: +12 antipatterns, +13 references, +2 agents, +1 hooks, обновлены строки всех конфигов, Health Metrics из audit-history |
+| 2026-02-17 | Аудит архитектуры: -test-smoke, /analyze→/spec-audit, /self-review→/output-review, выровнены директории (doc-lint, init-project), skill-audit Check 2 CRITICAL→WARNING |
+| 2026-02-16 | Плагины: +kotlin-lsp, таблица MCP серверов, расширение /update-ai-setup для plugins+MCP |
 | 2026-02-14 | MCP серверы, CI/CD PR Review, Markdownlint — паттерны #18-#20 |
 | 2026-02-14 | Кросс-IDE конфиги: 6 `.cursor/rules/*.mdc`, `.github/copilot-instructions.md`, `AGENTS.md` |
 | 2026-02-14 | Создание реестра: 17 паттернов, 8 скиллов, 9 анти-паттернов, 6 references |

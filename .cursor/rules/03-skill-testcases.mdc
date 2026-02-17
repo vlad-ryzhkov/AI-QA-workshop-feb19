@@ -1,6 +1,18 @@
 ---
-description: /testcases — мануальные тест-кейсы в Kotlin DSL
+description: SKILL: Generate Manual Test Cases in Kotlin DSL (use for /testcases)
 globs: "src/test/testCases/**"
 alwaysApply: false
 ---
+# SKILL: MANUAL TEST CASES DSL
+
+## TRIGGER
+Use this when generating human-readable test scenarios using the project's Kotlin DSL.
+
+## LOGIC SOURCE
+**EXECUTE the instruction set defined in:** `.claude/skills/testcases/SKILL.md`
+
 @.claude/skills/testcases/SKILL.md
+
+## KEY CONSTRAINT
+- Use the `TestCase` data class structure.
+- Do NOT generate JUnit tests when this skill is active (unless requested).

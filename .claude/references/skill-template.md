@@ -113,7 +113,7 @@ description: [Глагол] + [что] + [контекст]. Max 100 симво�
 
 **Хорошо:**
 ```yaml
-description: Генерирует API автотесты на Kotlin с Ktor и Kotest
+description: Генерирует API автотесты на Kotlin с common-test-libs и JUnit 5
 description: Анализирует спецификацию на противоречия и пробелы
 description: Проверяет тесты на соответствие naming convention
 ```
@@ -131,7 +131,7 @@ description: API тесты                        # нет глагола
 
 | Категория | Примеры | Типичный вывод |
 |-----------|---------|----------------|
-| **Analysis** | /analyze, /security-audit | Отчёт с findings |
+| **Analysis** | /spec-audit, /security-audit | Отчёт с findings |
 | **Generation** | /testcases, /api-tests | Код или документ |
 | **Validation** | /lint-tests, /check-coverage | Pass/Fail + детали |
 | **Transformation** | /openapi-to-tests | Конвертация форматов |

@@ -1,0 +1,16 @@
+# Build artifacts and caches
+build/
+.gradle/
+
+# IDE configuration
+.idea/
+.cursor/
+
+# Gradle wrapper binary
+gradle/wrapper/gradle-wrapper.jar
+
+# CI/CD (not relevant for QA work)
+.github/
+
+# Reference images (large binaries)
+rtl-example/

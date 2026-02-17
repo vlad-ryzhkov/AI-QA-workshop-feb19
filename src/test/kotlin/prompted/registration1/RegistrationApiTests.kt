@@ -2,7 +2,7 @@ package prompted.registration1
 
 import prompted.registration1.client.RegistrationApiClient
 import prompted.registration1.data.RegistrationTestData
-import prompted.registration1.mock.MockRegistrationServer
+import mock.MockRegistrationServer
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldMatch

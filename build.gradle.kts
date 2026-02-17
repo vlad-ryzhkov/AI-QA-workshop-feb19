@@ -12,6 +12,7 @@ repositories {
 val ktorVersion = "2.3.7"
 val kotestVersion = "5.8.0"
 val jacksonVersion = "2.16.1"
+val allureVersion = "2.25.0"
 
 dependencies {
     testImplementation(kotlin("test-junit5"))
@@ -27,6 +28,8 @@ dependencies {
     testImplementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
 
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
+
+    testImplementation("io.qameta.allure:allure-junit5:$allureVersion")
 
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
 }

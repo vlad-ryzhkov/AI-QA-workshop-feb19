@@ -1,7 +1,4 @@
 {
-  "enabledPlugins": {
-    "claude-md-management@claude-plugins-official": true
-  },
   "permissions": {
     "allow": [
       "Read",
@@ -15,11 +12,38 @@
     ],
     "deny": [
       "Bash(rm -rf *)",
+      "Bash(rm -r *)",
+      "Bash(chmod 777 *)",
+      "Bash(sudo *)",
       "Bash(git reset --hard*)",
+      "Bash(git clean -f*)",
       "Bash(git clean -fd*)",
       "Bash(git push --force*)",
       "Bash(git push -f *)",
       "Bash(git branch -D *)"
     ]
-  }
+  },
+  "enabledMcpjsonServers": [
+    "context7",
+    "sequential-thinking"
+  ],
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/skill-lint.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "claude-md-management@claude-plugins-official": true,
+    "kotlin-lsp@claude-plugins-official": false
+  },
+  "alwaysThinkingEnabled": true
 }

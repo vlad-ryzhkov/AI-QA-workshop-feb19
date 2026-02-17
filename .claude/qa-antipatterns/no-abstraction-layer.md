@@ -11,22 +11,22 @@ HTTP-вызовы напрямую в тестах:
 ## Bad Example
 
 ```kotlin
-// ❌ BAD: HTTP напрямую в каждом тесте
+// ❌ BAD: Raw HTTP напрямую в каждом тесте
 @Test
 fun `user can register`() {
-    val response = client.post("https://api.example.com/api/v1/users/register") {
+    val response = httpClient.post("https://api.example.com/api/v1/users/register") {
         contentType(ContentType.Application.Json)
         header("X-Api-Key", "secret-key")
         setBody(payload)
     }
 
-    response.status shouldBe HttpStatusCode.Created
+    assertEquals(201, response.code)
 }
 
 @Test
 fun `registration fails with invalid email`() {
     // Тот же boilerplate снова...
-    val response = client.post("https://api.example.com/api/v1/users/register") {
+    val response = httpClient.post("https://api.example.com/api/v1/users/register") {
         contentType(ContentType.Application.Json)
         header("X-Api-Key", "secret-key")
         setBody(invalidPayload)
@@ -37,35 +37,28 @@ fun `registration fails with invalid email`() {
 ## Good Example
 
 ```kotlin
-// ✅ GOOD: ApiClient инкапсулирует HTTP
-class RegistrationApiClient(
-    private val baseUrl: String = Config.API_URL,
-    private val apiKey: String = Config.API_KEY
-) {
-    private val client = HttpClient { /* config */ }
-
-    suspend fun register(request: RegisterRequest): ApiResponse<RegisterResponse> {
-        return client.post("$baseUrl/api/v1/users/register") {
-            contentType(ContentType.Application.Json)
-            header("X-Api-Key", apiKey)
-            setBody(request)
-        }.toApiResponse()
+// ✅ GOOD: Request class инкапсулирует HTTP
+class RegisterRequest(
+    request: FeatureRequest
+) : ApiRequestBaseJson<FeatureResponse>(FeatureResponse::class.java) {
+    init {
+        url = Config.baseUrl + Endpoints.REGISTER
+        body = request
     }
-
-    suspend fun deleteUser(userId: String) { /* ... */ }
 }
 
 // Тесты чистые и читаемые
 @Test
 fun `user can register`() {
-    val response = apiClient.register(validPayload)
-    response.status shouldBe 201
+    val response = ApiHelper.apiClient.execute { RegisterRequest(validPayload) }
+    assertEquals(201, response.code, "Registration should succeed with valid payload")
 }
 ```
 
 ## What to look for in code review
 
-- `client.post()`, `client.get()` напрямую в `@Test` методах
+- Raw HTTP вызовы (`httpClient.post()`, `httpClient.get()`) напрямую в `@Test` методах
 - Дублирование URL, headers, contentType
-- Отсутствие класса `*ApiClient` или `*Service`
+- Отсутствие Request classes extending `ApiRequestBaseJson<T>`
 - Хардкод URL в тестах (`"https://..."`)
+- Custom `ApiClient`/`ApiResponse` wrappers вместо common-test-libs

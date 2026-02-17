@@ -14,11 +14,11 @@ Assertions без сообщений:
 // ❌ BAD: Что упало? Почему?
 @Test
 fun `user registration flow`() {
-    val response = apiClient.register(payload)
+    val response = ApiHelper.apiClient.execute { RegisterRequest(payload) }
 
-    response.status shouldBe 201          // AssertionError: expected 201 but was 400
-    response.body.userId shouldNotBe null // Какой userId? Почему null?
-    response.body.status shouldBe "PENDING"
+    assertEquals(201, response.code)           // AssertionError: expected 201 but was 400
+    assertNotNull(response.body.userId)        // Какой userId? Почему null?
+    assertEquals("PENDING", response.body.status)
 }
 
 // В логах CI:
@@ -29,21 +29,25 @@ fun `user registration flow`() {
 ## Good Example
 
 ```kotlin
-// ✅ GOOD: Понятные сообщения
+// ✅ GOOD: assertEquals с message
 @Test
 fun `user registration flow`() {
-    val response = apiClient.register(payload)
+    val response = ApiHelper.apiClient.execute { RegisterRequest(payload) }
 
-    response.status shouldBe 201 withClue {
-        "Registration failed. Response: ${response.body}"
-    }
+    assertEquals(201, response.code, "Registration should return 201 for valid payload")
+    assertNotNull(response.body.userId, "User ID should be returned after successful registration")
+    assertEquals("PENDING", response.body.status, "New user should have PENDING status until OTP verification")
+}
 
-    response.body.userId.shouldNotBeNull().withClue {
-        "User ID should be returned after successful registration"
-    }
+// ✅ GOOD: Hamcrest checkAll для множественных проверок
+@Test
+fun `user registration flow`() {
+    val response = ApiHelper.apiClient.execute { RegisterRequest(payload) }
 
-    response.body.status shouldBe "PENDING" withClue {
-        "New user should have PENDING status until OTP verification"
+    checkAll {
+        assertEquals(201, response.code, "Registration should return 201")
+        assertNotNull(response.body.userId, "User ID should be present")
+        assertEquals("PENDING", response.body.status, "Status should be PENDING")
     }
 }
 
@@ -51,14 +55,14 @@ fun `user registration flow`() {
 @Test
 fun `user registration flow`() {
     step("Register new user") {
-        val response = apiClient.register(payload)
+        val response = ApiHelper.apiClient.execute { RegisterRequest(payload) }
 
         step("Verify HTTP 201 Created") {
-            response.status shouldBe 201
+            assertEquals(201, response.code, "Registration should succeed")
         }
 
         step("Verify user ID is returned") {
-            response.body.userId.shouldNotBeNull()
+            assertNotNull(response.body.userId, "User ID should be present")
         }
     }
 }
@@ -66,7 +70,7 @@ fun `user registration flow`() {
 
 ## What to look for in code review
 
-- `shouldBe`, `assertEquals` без `withClue` / message параметра
+- `assertEquals`, `assertNotNull` без message параметра
 - Несколько assertions подряд без контекста
 - Отсутствие Allure `step()` в integration тестах
 - Assertions на вложенные поля без пояснения структуры

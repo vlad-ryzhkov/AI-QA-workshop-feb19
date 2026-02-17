@@ -76,7 +76,7 @@
         table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
         th, td { padding: 0.5rem 0.75rem; text-align: left; border-bottom: 1px solid var(--border); }
         th { background: #f8fafc; font-weight: 600; }
-        .screenshot { max-width: 400px; border-radius: 8px; margin: 1rem auto; display: block; }
+        .screenshot { max-width: 100%; border-radius: 8px; margin: 1rem auto; display: block; }
         .verdict { padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
         .verdict.pass { background: #dcfce7; color: #166534; }
         .verdict.fail { background: #fee2e2; color: #991b1b; }
@@ -153,9 +153,6 @@
 ## Команды для подготовки изображений
 
 ```bash
-# Сжать до оптимального размера (400px ширина)
-sips -Z 400 screenshot.png
-
 # Проверить размер
 sips -g pixelWidth -g pixelHeight screenshot.png
 ```
