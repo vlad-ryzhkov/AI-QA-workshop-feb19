@@ -22,10 +22,9 @@
 **Ситуация:** Пункт плана (endpoint) не может быть реализован после 3 попыток компиляции.
 
 **Причины:**
-- Библиотека common-test-libs не поддерживает формат Auth (OAuth2 implicit flow, client credentials)
 - Спецификация неполная (отсутствуют DTOs для request/response body)
 - Конфликт зависимостей (Jackson version mismatch, Kotlin version incompatibility)
-- Техническое ограничение (WebSocket, Server-Sent Events не поддерживаются common-test-libs)
+- Неустранимая ошибка компиляции (generics, reflection, platform-specific API)
 
 **Действия SDET:**
 
@@ -46,8 +45,8 @@
 
    Требуется решение от Planner (Auditor):
    1. Исключить {endpoint} из scope (если не критично)
-   2. Обновить common-test-libs для поддержки {feature}
-   3. Предоставить альтернативный endpoint с поддерживаемой технологией
+   2. Дополнить спецификацию недостающими DTOs/схемами
+   3. Обновить зависимости проекта (если конфликт версий)
 
    ⏸️ Жду решения Orchestrator.
 
@@ -116,7 +115,7 @@
 ## Kotlin Compilation Rules
 
 1. `@JsonNaming(SnakeCaseStrategy::class)` на DTO вместо per-field `@JsonProperty`
-2. common-test-libs polling: только секунды, не миллисекунды
+2. Awaitility polling: только секунды, не миллисекунды
 3. `@Step` в Helper-классах, НЕ на suspend-функциях
 4. Compilation gate: `./gradlew compileTestKotlin`
 5. `@AllureId`: только `./gradlew assignAllureIds`, не вручную

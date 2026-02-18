@@ -1,6 +1,6 @@
 ---
 name: api-tests
-description: Generate Production-Ready REST API tests (Kotlin/common-test-libs). Config/Requests/Helpers/Tests separation.
+description: Generate Production-Ready REST API tests (Kotlin). Config/Requests/Helpers/Tests separation.
 allowed-tools: "Read Write Edit Glob Grep Bash(./gradlew*)"
 agent: agents/sdet.md
 context: fork
@@ -12,13 +12,13 @@ context: fork
 
 ---
 
-# SDET: API Automation (Kotlin/common-test-libs)
+# SDET: API Automation (Kotlin)
 
 ## Protocol
-1. **Stack:** common-test-libs (`ApiClient`, `ApiRequestBaseJson`), JUnit5, Awaitility.
+1. **Stack:** HTTP-клиент, JUnit5, Awaitility.
 2. **BANNED:** `Thread.sleep`, `delay`, `runBlocking`, custom HTTP wrappers, inline HTTP in tests, manual `@AllureId`, `shouldBe` (use `assertEquals`), comments.
 3. **Structure:**
-   - `requests/`: DTOs (`@JsonNaming`) + Requests (`ApiRequestBaseJson`).
+   - `requests/`: DTOs (`@JsonNaming`) + Request-объекты.
    - `helpers/`: `@Step` annotated flows.
    - `tests/`: `@Severity`, `@DisplayName`, sync execution.
 4. **Gates:** `compileTestKotlin`, `ktlintCheck`.
@@ -131,7 +131,7 @@ grep -r "Map<String, Any>" src/main/kotlin/
 - **Models:** `data class` + `@JsonNaming(SnakeCaseStrategy)`.
 - **Requests:** `init { body = ...; headers[...] = ... }`.
 - **Helpers:** `object FeatureHelper` with `@Step` methods returning data.
-- **Tests:** `extends TestBase`. `apiClient.execute { Request(args) }`.
+- **Tests:** `extends TestBase`. HTTP-клиент выполняет Request, результат проверяется assertions.
 
 ## Coverage Matrix
 | Category | Priority Checks |
