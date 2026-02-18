@@ -1,0 +1,17 @@
+---
+description: SKILL: Analyze UI Screenshots for defects & L10N (use for /screenshot-analyze)
+globs: "src/test/resources/screenshots/**"
+alwaysApply: false
+---
+# SKILL: SCREENSHOT ANALYSIS
+
+## TRIGGER
+Use this when an image is attached or referenced for UI review.
+
+## LOGIC SOURCE
+**EXECUTE the instruction set defined in:** `.claude/skills/screenshot-analyze/SKILL.md`
+
+@.claude/skills/screenshot-analyze/SKILL.md
+
+## OUTPUT
+Provide a structured list of UI/UX defects, localization issues, and layout bugs.

@@ -14,6 +14,13 @@ context: fork
 
 # Manual Test Case Generator (Kotlin DSL)
 
+## Input Validation (Critical)
+
+1. **Check Upstream:** Проверь наличие `audit/test-plan.md`.
+   - Если нет → **STOP**. Выведи: `⛔ BLOCKER: audit/test-plan.md not found. Run /test-plan first.`
+2. **Read Scope:** Прочитай `audit/test-plan.md`. Извлеки из секции "3. Execution List for SDET" список P0 и P1 сценариев.
+   - Генерация тестов ТОЛЬКО для сценариев, описанных в плане.
+
 ## Protocol
 
 1. **Format:** Kotlin DSL (`@Manual`, `@Epic`, `@Feature`, `@AllureId`).
@@ -76,8 +83,8 @@ class FeatureTests {
 
 ## Execution Flow
 
-1. **Analyze:** Извлеки границы, статусы, роли из spec/audit.
-2. **Draft:** Генерируй DSL по Template. Примени BVA + EP + Error Guessing.
+1. **Analyze:** Прочитай `audit/test-plan.md` (P0 → P1). Для каждого item читай спецификацию для извлечения границ, статусов, ролей.
+2. **Draft:** Генерируй DSL по Template. Примени BVA + EP + Error Guessing. Порядок: P0 → P1.
 3. **Verify:**
    - BVA полный? (Min-1/Min, Max/Max+1)
    - NO hardcode? (email/phone/name)
@@ -88,7 +95,8 @@ class FeatureTests {
    ```
    ✅ SKILL COMPLETE: /testcases
    ├─ Артефакты: src/test/kotlin/manualtests/{feature}/*.kt
-   ├─ Тестов: N
+   ├─ Upstream: audit/test-plan.md
+   ├─ Тестов: N (P0: X, P1: Y)
    ├─ BVA Coverage: X/Y границ (NN%)
    └─ Data Strategy: ✅
    ```

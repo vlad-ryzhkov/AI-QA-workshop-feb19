@@ -1,0 +1,17 @@
+---
+description: SKILL: Generate Test Coverage Plan (use for /test-plan)
+globs: "audit/**,specifications/**"
+alwaysApply: false
+---
+# SKILL: TEST PLAN
+
+## TRIGGER
+Use this when creating a prioritized test coverage plan based on specification analysis.
+
+## LOGIC SOURCE
+**EXECUTE the instruction set defined in:** `.claude/skills/test-plan/SKILL.md`
+
+@.claude/skills/test-plan/SKILL.md
+
+## OUTPUT
+Follow the Markdown report format defined in the skill file strictly.

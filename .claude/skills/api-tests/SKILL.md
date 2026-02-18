@@ -111,7 +111,9 @@ grep -r "Map<String, Any>" src/main/kotlin/
    - Если все проверки PASS → прочитай test-plan.md и парси Execution List
 1. **Discovery:**
    - Read `CLAUDE.md`, `build.gradle.kts`.
+   - Если передан аргумент (путь к спецификации) — прочитай его как дополнительный контекст к Execution List.
    - Glob `src/**/*Test*.kt`, `src/**/requests/**/*.kt`.
+   - **Manual Tests Linkage:** Glob `src/test/kotlin/manualtests/**/*.kt`. Если найдены — при генерации автотеста для совпадающей фичи добавь KDoc: `/** Manual: {filename} */`. Если папка не найдена — INFO и продолжай.
    - Print Summary: Config/Patterns/Deps status.
 2. **Plan & Gen:**
    - USE `audit/test-plan.md` Priority Matrix для порядка endpoint-ов (P0 → P1 → P2)
@@ -120,12 +122,12 @@ grep -r "Map<String, Any>" src/main/kotlin/
    - **Phase 1:** Stateless (Validation, Auth fail).
    - **Phase 2:** 1-step setup (CRUD, simple flows).
    - **Phase 3:** Multi-step (Helpers, State transitions).
-3. **Compile:** `./gradlew compileTestKotlin && ./gradlew ktlintCheck`. Если > 3 неудачных компиляций → ESCALATION (см. ниже)
+3. **Compile:** `./gradlew compileTestKotlin && ./gradlew ktlintCheck`. Если > 1 неудачных компиляций → ESCALATION (см. ниже)
 4. **Verify:** Grep BANNED patterns (см. Post-Check выше). Fix violations → re-compile.
 
 ### Escalation (3-Strike Rule)
 
-**Если > 3 неудачных компиляций на одном endpoint:** Активируй **Escalation Protocol** (определён в Agent Prompt). EXIT с `⚠️ SKILL PARTIAL`.
+**Если > 1 неудачных компиляций на одном endpoint:** Активируй **Escalation Protocol** (определён в Agent Prompt). EXIT с `⚠️ SKILL PARTIAL`.
 
 ## Architecture
 - **Models:** `data class` + `@JsonNaming(SnakeCaseStrategy)`.
@@ -186,7 +188,7 @@ grep -r "Map<String, Any>" src/main/kotlin/
 
 ```
 ✅ SKILL COMPLETE: /api-tests
-├─ Артефакты: [список .kt файлов]
+├─ Артефакты: src/main/kotlin/**/ (requests, helpers, config) + src/test/kotlin/**/ (tests)
 ├─ Compilation: PASS
 ├─ Upstream: audit/test-plan.md (P0: X endpoints, P1: Y endpoints)
 ├─ Coverage: N/M endpoints из плана (NN%)

@@ -48,3 +48,7 @@ src/test/kotlin/rawResults/**
 
 # IDE (full ignore)
 .idea/
+
+# macOS
+.DS_Store
+**/.DS_Store

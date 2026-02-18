@@ -1,0 +1,17 @@
+---
+description: SKILL: Generate New Skills with Interactive Workflow (use for /init-skill)
+globs: ".claude/skills/**"
+alwaysApply: false
+---
+# SKILL: INIT SKILL
+
+## TRIGGER
+Use this when creating a new skill, standardizing a QA process, or automating routine checks.
+
+## LOGIC SOURCE
+**EXECUTE the instruction set defined in:** `.claude/skills/init-skill/SKILL.md`
+
+@.claude/skills/init-skill/SKILL.md
+
+## KEY CONSTRAINT
+- Do NOT use to edit existing skills — edit SKILL.md files directly.
