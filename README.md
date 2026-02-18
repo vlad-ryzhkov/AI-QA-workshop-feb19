@@ -4,7 +4,7 @@
 
 ## План воркшопа
 
-1. **Проектирование контекста AI**
+1. **Теория проектирование контекста AI** - примеры скиллов и агентов
 
 2. **От требований к тестам** — автоматизируем анализ спецификаций и генерируем качественные ручные тест-кейсы.
 
@@ -81,6 +81,7 @@ QA-инженерам (Manual & Auto), желающим ускорить еже�
 
 - **[Anthropic Cookbook](https://github.com/anthropics/anthropic-cookbook)**
 - **[The-Complete-Guide-to-Building-Skill-for-Claude](https://resources.anthropic.com/hubfs/The-Complete-Guide-to-Building-Skill-for-Claude.pdf?hsLang=en)**
+- **[Sub-agents](https://code.claude.com/docs/en/sub-agents)**
 
 ### 🔵 VS Code & GitHub Copilot
 

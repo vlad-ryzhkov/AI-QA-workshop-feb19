@@ -1,18 +1,17 @@
 ---
-description: SKILL: Generate Manual Test Cases in Kotlin DSL (use for /testcases)
-globs: "src/test/testCases/**"
+description: SKILL: Generate Test Scenarios Matrix from API spec (use for /test-cases)
+globs: "audit/**,specifications/**"
 alwaysApply: false
 ---
-# SKILL: MANUAL TEST CASES DSL
+# SKILL: TEST CASES
 
 ## TRIGGER
-Use this when generating human-readable test scenarios using the project's Kotlin DSL.
+Use this when generating test scenarios matrix from API specification.
 
 ## LOGIC SOURCE
-**EXECUTE the instruction set defined in:** `.claude/skills/testcases/SKILL.md`
+**EXECUTE the instruction set defined in:** `.claude/skills/test-cases/SKILL.md`
 
-@.claude/skills/testcases/SKILL.md
+@.claude/skills/test-cases/SKILL.md
 
-## KEY CONSTRAINT
-- Use the `TestCase` data class structure.
-- Do NOT generate JUnit tests when this skill is active (unless requested).
+## OUTPUT
+Output: `audit/test-scenarios.md`

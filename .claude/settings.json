@@ -8,11 +8,10 @@
       "Grep",
       "WebFetch",
       "WebSearch",
-      "Bash"
+      "Bash",
+      "mcp__sequential-thinking__sequentialthinking"
     ],
     "deny": [
-      "Bash(rm -rf *)",
-      "Bash(rm -r *)",
       "Bash(chmod 777 *)",
       "Bash(sudo *)",
       "Bash(git reset --hard*)",
@@ -20,7 +19,10 @@
       "Bash(git clean -fd*)",
       "Bash(git push --force*)",
       "Bash(git push -f *)",
-      "Bash(git branch -D *)"
+      "Bash(git branch -D *)",
+      "Bash(rm *)",
+      "Bash(rm -r*)",
+      "Bash(unlink *)"
     ]
   },
   "enabledMcpjsonServers": [
@@ -42,8 +44,7 @@
     ]
   },
   "enabledPlugins": {
-    "claude-md-management@claude-plugins-official": true,
-    "kotlin-lsp@claude-plugins-official": false
+    "kotlin-lsp@claude-plugins-official": true
   },
   "alwaysThinkingEnabled": true
 }

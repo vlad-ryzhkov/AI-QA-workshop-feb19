@@ -29,7 +29,7 @@ context: fork
 
 YAML-заголовок (всегда в промпте) → Тело SKILL.md (при активации) → scripts/references (по запросу).
 
-Полная диаграмма: `.claude/references/skill-template.md` → секция "Progressive Disclosure".
+Полная диаграмма: `references/skill-template.md` → секция "Progressive Disclosure".
 
 ## Стиль написания
 
@@ -85,7 +85,7 @@ YAML-заголовок (всегда в промпте) → Тело SKILL.md (
 
 Категории: **Analysis** (отчёт), **Generation** (код/документ), **Validation** (pass/fail), **Transformation** (конвертация).
 
-Полная таблица с примерами: `.claude/references/skill-template.md` → секция "Категории skills".
+Полная таблица с примерами: `references/skill-template.md` → секция "Категории skills".
 
 ### Шаг 1.3: Собери конкретные примеры использования
 
@@ -217,7 +217,7 @@ description: [твой вариант]
 
 ### Шаг 5.1: Сгенерируй полный SKILL.md
 
-Прочитай и используй шаблон из `.claude/references/skill-template.md` → секция "Шаблон".
+Прочитай и используй шаблон из `references/skill-template.md` → секция "Шаблон".
 
 **Стиль:** императивный (см. "Стиль написания" выше).
 
@@ -278,6 +278,6 @@ bash .claude/skills/init-skill/scripts/init_skill.sh [skill-name]
 ## Связанные файлы
 
 - Init-скрипт: `.claude/skills/init-skill/scripts/init_skill.sh`
-- Шаблон: `.claude/references/skill-template.md`
+- Шаблон: `references/skill-template.md`
 - Полный гайд: `docs/ai-files-handbook.md`
 - Примеры: `.claude/skills/*/SKILL.md`
