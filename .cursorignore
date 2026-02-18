@@ -7,6 +7,7 @@
 build/
 .gradle/
 *.jar
+*.class
 
 # OS
 .DS_Store
@@ -20,5 +21,10 @@ allure-results/
 .git/
 .github/
 
-# Other
+# Dependencies
 node_modules/
+
+# Temp/Cache
+*.swp
+*.swo
+*.tmp
