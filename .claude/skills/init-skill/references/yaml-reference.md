@@ -11,7 +11,7 @@
   - Уникально в пределах проекта
 - **Примеры:**
   - ✅ `test-plan`, `api-tests`, `screenshot-analyze`
-  - ❌ `TestPlan`, `api_tests`, `claude-helper`
+  - ❌ `TestPlan`, `claude-helper`
 
 ### description
 - **Формат:** `[Что делает]. [Когда использовать]. [Когда НЕ использовать]`

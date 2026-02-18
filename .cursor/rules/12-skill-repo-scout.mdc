@@ -1,0 +1,17 @@
+---
+description: SKILL: Scan Backend Repo & Catalog API Surface (use for /repo-scout)
+globs: "audit/**"
+alwaysApply: false
+---
+# SKILL: REPO SCOUT
+
+## TRIGGER
+Use this when entering a new backend repository (Go) before writing tests to catalog API surface, infrastructure and test coverage.
+
+## LOGIC SOURCE
+**EXECUTE the instruction set defined in:** `.claude/skills/repo-scout/SKILL.md`
+
+@.claude/skills/repo-scout/SKILL.md
+
+## KEY CONSTRAINT
+- Do NOT use for QA projects — use /init-project for those.

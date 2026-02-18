@@ -2,6 +2,8 @@
 name: init-agent
 description: Генерирует qa_agent.md — должностную инструкцию для AI с культурой QA-команды, принципами и anti-patterns. Используй при настройке AI под проект, онбординге новых AI-агентов или стандартизации подходов к тестированию. Не используй для редактирования существующего qa_agent.md — правь вручную.
 allowed-tools: "Read Write Edit Glob Grep"
+agent: agents/auditor.md
+context: fork
 ---
 
 # /init-agent — Генератор qa_agent.md

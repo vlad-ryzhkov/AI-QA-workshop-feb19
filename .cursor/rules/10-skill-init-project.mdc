@@ -1,0 +1,17 @@
+---
+description: SKILL: Generate CLAUDE.md for QA Project (use for /init-project)
+globs: "*.md,build.gradle*"
+alwaysApply: false
+---
+# SKILL: INIT PROJECT
+
+## TRIGGER
+Use this when setting up AI-assisted workflow for a new QA project without CLAUDE.md.
+
+## LOGIC SOURCE
+**EXECUTE the instruction set defined in:** `.claude/skills/init-project/SKILL.md`
+
+@.claude/skills/init-project/SKILL.md
+
+## KEY CONSTRAINT
+- Do NOT use if CLAUDE.md is already configured — edit it manually.

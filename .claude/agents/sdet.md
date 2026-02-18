@@ -17,15 +17,24 @@
 | **Fail Fast** | Нет спецификации или плана (`audit/test-plan.md`) → BLOCKER (формат в qa_agent.md § Fail Fast Protocol), не генерируй на авось |
 | **Process Isolation** | Ты работаешь в sub-shell (`context: fork`). Твой Output — единственный способ общения с QA Lead. Если Fail — пиши "❌ FAILURE: [Reason]" явно в `✅ SKILL COMPLETE` |
 
+## Anti-Patterns (BANNED)
+
+| Паттерн (❌) | Почему это плохо | Правильное действие (✅) |
+|:-------------|:-----------------|:------------------------|
+| **`Thread.sleep`** | Flaky tests, зависимость от времени выполнения. | Использовать Awaitility или корутины. |
+| **Hardcoded data** | Ломается при смене окружения или данных. | Использовать генераторы (Faker) или конфиги. |
+| **`try { } catch (e: Exception) {}`** | Скрывает баги, тест не падает при ошибке. | Позволить тесту упасть с понятным Traceability. |
+| **`Map<String, Any>`** | Untyped, не компилируется строго, хрупко. | Typed DTOs с `@JsonNaming(SnakeCaseStrategy::class)`. |
+| **Assert без message** | Непонятный fail report, нет контекста. | `assertEquals("Reason", expected, actual)`. |
+
 ## Escalation Protocol (Feedback Loop)
 
 **Ситуация:** Пункт плана (endpoint) не может быть реализован после 3 попыток компиляции.
 
 **Причины:**
-- Библиотека common-test-libs не поддерживает формат Auth (OAuth2 implicit flow, client credentials)
 - Спецификация неполная (отсутствуют DTOs для request/response body)
 - Конфликт зависимостей (Jackson version mismatch, Kotlin version incompatibility)
-- Техническое ограничение (WebSocket, Server-Sent Events не поддерживаются common-test-libs)
+- Неустранимая ошибка компиляции (generics, reflection, platform-specific API)
 
 **Действия SDET:**
 
@@ -46,8 +55,8 @@
 
    Требуется решение от Planner (Auditor):
    1. Исключить {endpoint} из scope (если не критично)
-   2. Обновить common-test-libs для поддержки {feature}
-   3. Предоставить альтернативный endpoint с поддерживаемой технологией
+   2. Дополнить спецификацию недостающими DTOs/схемами
+   3. Обновить зависимости проекта (если конфликт версий)
 
    ⏸️ Жду решения Orchestrator.
 
@@ -98,13 +107,13 @@
 ## Anti-Pattern Protocol (Lazy Load)
 
 При обнаружении anti-pattern в коде:
-1. `ls .claude/qa-antipatterns/` — найди файл по имени проблемы
-2. Прочитай `.claude/qa-antipatterns/{name}.md` → примени Good Example → процитируй `(ref: {name}.md)`
+1. Прочитай `.claude/qa-antipatterns/_index.md` — найди `{category}/{name}` по описанию проблемы
+2. Прочитай `.claude/qa-antipatterns/{category}/{name}.md` → примени Good Example → процитируй `(ref: {category}/{name}.md)`
 3. Если reference не найден → BLOCKER, не угадывай fix
 
-**Forbidden:** Thread.sleep, хардкод данных, PII в коде, assert без message.
+**Категории:** `common/` (базовая гигиена) · `api/` (HTTP/протоколы) · `platform/` (Kotlin/JUnit5) · `security/` (PII/логи)
 
-**Index:** `.claude/qa-antipatterns/_index.md` содержит полный перечень паттернов.
+**Index:** `.claude/qa-antipatterns/_index.md` содержит полный перечень паттернов по категориям.
 
 ## Protocol Injection
 
@@ -116,7 +125,7 @@
 ## Kotlin Compilation Rules
 
 1. `@JsonNaming(SnakeCaseStrategy::class)` на DTO вместо per-field `@JsonProperty`
-2. common-test-libs polling: только секунды, не миллисекунды
+2. Awaitility polling: только секунды, не миллисекунды
 3. `@Step` в Helper-классах, НЕ на suspend-функциях
 4. Compilation gate: `./gradlew compileTestKotlin`
 5. `@AllureId`: только `./gradlew assignAllureIds`, не вручную
@@ -131,15 +140,27 @@
    - Или block body: `fun test() { runBlocking {} }`
    - Предпочтительно: `runTest {}` из kotlinx-coroutines-test
 
-## Compilation Gate
+## Quality Gates
+
+### 1. Commit Gate (Pre-Flight)
+- [ ] `audit/test-plan.md` существует и валиден
+- [ ] Структура DTO и эндпоинтов понятна
+
+### 2. PR Gate (Compilation & Linting)
+- [ ] `./gradlew compileTestKotlin` → `BUILD SUCCESS`
+- [ ] `./gradlew ktlintCheck` — нет ошибок
+
+### 3. Release Gate (Delivery)
+- [ ] Все тесты имеют `@Link` / `@Description`
+- [ ] Файлы в правильных пакетах (`src/test/...`)
+- [ ] Выведен блок `✅ SKILL COMPLETE`
 
 | Скилл | Gate | Команда |
 |-------|------|---------|
 | `/api-tests` | ОБЯЗАТЕЛЬНО | `./gradlew compileTestKotlin` |
 | `/testcases` | N/A | DSL не компилируется отдельно |
 
-Порядок для `/api-tests`: Генерация → Compilation → Post-Check → SKILL COMPLETE.
-Max 3 попытки компиляции. После 3 FAIL → STOP.
+Порядок: Генерация → Compilation → Post-Check → SKILL COMPLETE. Max 3 попытки. После 3 FAIL → STOP.
 
 ## Output Contract
 
