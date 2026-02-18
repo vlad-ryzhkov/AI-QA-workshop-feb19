@@ -1,6 +1,26 @@
 {
   "permissions": {
-    "allow": [],
-    "deny": []
+    "allow": [
+      "Read",
+      "Edit",
+      "Write",
+      "Glob",
+      "Grep",
+      "WebFetch",
+      "WebSearch",
+      "Bash"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(rm -r *)",
+      "Bash(chmod 777 *)",
+      "Bash(sudo *)",
+      "Bash(git reset --hard*)",
+      "Bash(git clean -f*)",
+      "Bash(git clean -fd*)",
+      "Bash(git push --force*)",
+      "Bash(git push -f *)",
+      "Bash(git branch -D *)"
+    ]
   }
 }
