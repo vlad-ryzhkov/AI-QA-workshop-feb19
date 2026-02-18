@@ -61,7 +61,7 @@ git checkout spec-only
 В произвольной форме через промпт в чате просим сгенерировать API-тесты:
 
 ```
-Сгенерируй API-тесты на Kotlin + JUnit
+Ты - Senior QA Engineer, сгенерируй API-тесты на Kotlin + JUnit
 для требований из файла specifications/specifications_v1/registration_api_v1.md
 ```
 
