@@ -7,15 +7,15 @@
 
 ### SKILLs для создания Claude.md, agent.md, SKILL.md
 
-/init-project
-/init-agent
-/init-skill
+- /init-project
+- /init-agent
+- /init-skill
 
 ### SKILLs для тестирования:
 
-/spec-audit - аудит требований
-/test-cases - создание тест-кейсов
-/api-tests - генерация API тестов
+- /spec-audit - аудит требований
+- /test-cases - создание тест-кейсов
+- /api-tests - генерация API тестов
 
 ## План воркшопа
 
