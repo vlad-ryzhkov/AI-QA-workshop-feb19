@@ -154,19 +154,7 @@
 
 **Цель:** Собрать все findings в структурированный отчёт.
 
-### 6.2 History Append
-
-После генерации отчёта — append строку в `audit/audit-history.md`:
-
-```
-| {YYYY-MM-DD} | /doc-lint | {scope} | {Health Score}/100 | {CRITICAL} | {WARNING} | {INFO} | {файлов просканировано} | {краткое примечание} |
-```
-
-- Score = Health Score из формулы `100 - (CRITICAL x 15) - (WARNING x 5) - (INFO x 0.5)`
-- Тесты = количество просканированных файлов
-- Если файл `audit/audit-history.md` не существует — создать с заголовком из шаблона
-
-### 6.3 Safe Fix Script Generation
+### 6.2 Safe Fix Script Generation
 
 Сгенерировать Bash-скрипт `audit/safe-fix.sh` с безопасными автоматическими исправлениями.
 

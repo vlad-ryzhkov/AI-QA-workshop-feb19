@@ -2,6 +2,8 @@
 name: repo-scout
 description: Сканирует бэкенд-репозиторий (Go), каталогизирует API surface, инфраструктуру и тестовое покрытие. Используй при входе в новый репо перед написанием тестов. Не используй для QA-проектов — для них /init-project.
 allowed-tools: "Read Glob Grep Bash(ls*) Bash(wc*)"
+agent: agents/sdet.md
+context: fork
 ---
 
 # /repo-scout — Разведка бэкенд-репозитория
@@ -44,7 +46,7 @@ allowed-tools: "Read Glob Grep Bash(ls*) Bash(wc*)"
 
 **Iterative steps:** Не выводить прогресс по каждому файлу. Checkpoint только при:
 - Phase transition (Фаза N → Фаза N+1)
-- Blocker обнаружен
+- Предупреждение обнаружено
 - Завершение (SKILL COMPLETE)
 
 **Tools first:**
@@ -75,7 +77,7 @@ allowed-tools: "Read Glob Grep Bash(ls*) Bash(wc*)"
    ```
    go.mod, go.sum, Makefile
    ```
-   Если `go.mod` не найден — выведи BLOCKER: "Не Go-проект. /repo-scout поддерживает только Go."
+   Если `go.mod` не найден — выведи: "⚠️ WARNING: go.mod не найден, возможно не Go-проект. Сканирую доступную структуру."
 
 2. Извлеки из `go.mod`:
    - Имя модуля (module path)

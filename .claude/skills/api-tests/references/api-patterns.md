@@ -28,3 +28,41 @@
 - **Logic:** Request A -> Response X. Request A (again) -> Response X (Identical).
 - **DELETE:** 204 -> 204 (or 404 depending on spec).
 - **Key:** POST + Key -> 201. Retry + Same Key -> 200 (Not 201), same body.
+
+## 5. Architecture
+Полные примеры кода: `references/examples.md`.
+
+| Компонент | Правило |
+|-----------|---------|
+| `object Endpoints` | Все URL — `const val` константы. Хардкод путей в клиенте запрещён. |
+| `data class` Request | Все поля `Any?` — поддержка NEG-тестов с невалидными типами |
+| `@JsonNaming` | Определяется из Style Analysis. Не добавляй, если в проекте поля уже snake_case нативно. |
+| `object FeatureHelper` | `@Step` методы. `verify{Entity}InDb` — обязателен для `DB:` сценариев. |
+| `FakerService` | Обёртка над Faker. TestData не хранит статичные строки. |
+| JSON schemas | `src/test/resources/schemas/`. Для `Contract Match` сценариев. |
+| Lazy init | `by lazy(LazyThreadSafetyMode.SYNCHRONIZED)` для HttpClient, Faker. |
+
+## 6. Translation Rules (Parsing Expected Result)
+
+| Keyword в Expected | Генерируемый код |
+|--------------------|-----------------|
+| `Contract Match` | `response.validateSchema("schema_name.json")` |
+| `DB:` | `Helper.verify{Entity}InDb(...)` после запроса |
+| `Event published` | Awaitility check в Helper-е (async queue) |
+| `Content-Type` | `assertEquals` на `response.headers["Content-Type"]` |
+| `Cleanup:` | `delete{Entity}` в `@AfterEach` или try-finally |
+
+## 7. Coverage Matrix
+
+| Category | Priority Checks |
+|----------|-----------------|
+| **Write** | 400 (Structural/Validation/Security) → 401/403 → 201 → 409 → 429 |
+| **Read** | 200 (Fields/List/Empty) → Filter/Sort → 400 (Params) → 401/404 |
+| **Delete** | 200/204 → 404 (Verify) → 401 → Idempotency |
+
+## 8. Grouping Strategy (Parameterized Tests)
+
+- NEG/BVA сценарии одного endpoint с одинаковым Expected → `@ParameterizedTest` при ≥3 совпадениях.
+- Источник данных: `@MethodSource("provide{EndpointName}ValidationData")`.
+- Параметр: объект `(inputData, expectedField, expectedErrorCode)`.
+- Happy Path (POS) — всегда отдельный `@Test` для наглядности в Allure.

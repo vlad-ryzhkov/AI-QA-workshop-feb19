@@ -1,0 +1,30 @@
+# Build artifacts and caches
+build/
+.gradle/
+
+# IDE configuration
+.idea/
+.cursor/
+
+# Gradle wrapper binary
+gradle/wrapper/gradle-wrapper.jar
+
+# CI/CD (not relevant for QA work)
+.github/
+
+# Reference images (large binaries)
+rtl-example/
+
+# Workshop output dirs
+src/test/testCases/**
+!src/test/testCases/.gitkeep
+src/test/kotlin/rawResults/**
+!src/test/kotlin/rawResults/.gitkeep
+
+# Audit results
+audit/
+specifications-audit/
+
+# macOS
+.DS_Store
+**/.DS_Store

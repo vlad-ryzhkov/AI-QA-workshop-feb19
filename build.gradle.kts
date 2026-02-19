@@ -32,6 +32,7 @@ dependencies {
     testImplementation("io.qameta.allure:allure-junit5:$allureVersion")
 
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:5.10.1")
 }
 
 tasks.test {

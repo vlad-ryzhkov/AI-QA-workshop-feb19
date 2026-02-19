@@ -2,6 +2,8 @@
 name: init-project
 description: Генерирует CLAUDE.md для QA-проекта: сканирует репозиторий, анализирует tech stack, создаёт онбординг-документ. Используй для нового QA-проекта без CLAUDE.md или настройки AI-assisted workflow. Не используй если CLAUDE.md уже настроен — редактируй вручную.
 allowed-tools: "Read Write Edit Glob Grep Bash(ls*)"
+agent: agents/sdet.md
+context: fork
 ---
 
 # /init-project — Генератор CLAUDE.md

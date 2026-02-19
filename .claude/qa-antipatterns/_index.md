@@ -5,49 +5,68 @@
 
 ## Naming Convention
 
-`{problem-name}.md` → описание проблемы и Good Example.
+`{category}/{problem-name}.md` → описание проблемы и Good Example.
 
 ## Available Patterns
 
+### common/ — Базовая гигиена кода
+
 | Файл | Проблема |
 |------|----------|
-| `assertion-without-message.md` | Assertions без message |
-| `configure-http-client.md` | HTTP client не настроен |
-| `controlled-retries.md` | Нет retry strategy |
-| `coroutine-test-return-type.md` | `runBlocking` без явного Unit type |
-| `flaky-sleep-tests.md` | `Thread.sleep()` вместо polling |
-| `hardcoded-test-data.md` | Hardcoded данные |
-| `information-leakage-in-errors.md` | Утечка данных в логах ошибок |
-| `junit-test-initialization.md` | `@TestInstance(PER_CLASS)` + field init failures |
-| `map-instead-of-dto.md` | `Map<String, Any>` вместо DTO |
-| `missing-content-type-validation.md` | Content-Type не валидируется |
-| `no-abstraction-layer.md` | Прямые HTTP-вызовы в тестах |
-| `no-cleanup-pattern.md` | Нет cleanup после тестов |
-| `no-hardcoded-timeouts.md` | Магические числа в таймаутах |
-| `no-order-dependent-tests.md` | Тесты зависят друг от друга |
-| `no-sensitive-data-logging.md` | PII в логах |
-| `no-shared-mutable-state.md` | Shared state между тестами |
-| `pii-in-test-data.md` | PII в тестовых данных |
-| `pii-literals-in-code.md` | PII литералы в коде |
-| `static-object-mother.md` | Static Object Mother |
-| `wrap-infrastructure-errors.md` | Unwrapped infrastructure errors |
+| `common/assertion-without-message.md` | Assertions без message |
+| `common/hardcoded-test-data.md` | Hardcoded данные |
+| `common/no-abstraction-layer.md` | Прямые HTTP-вызовы в тестах |
+| `common/static-object-mother.md` | Static Object Mother |
+| `common/no-order-dependent-tests.md` | Тесты зависят друг от друга |
+| `common/no-cleanup-pattern.md` | Нет cleanup после тестов |
 
-## Usage (для Auditor)
+### api/ — Специфика HTTP и протоколов
 
-```bash
-# Сканируй файлы через ls
-ls .claude/qa-antipatterns/
+| Файл | Проблема |
+|------|----------|
+| `api/map-instead-of-dto.md` | `Map<String, Any>` вместо DTO |
+| `api/missing-content-type-validation.md` | Content-Type не валидируется |
+| `api/configure-http-client.md` | HTTP client не настроен |
+| `api/wrap-infrastructure-errors.md` | Unwrapped infrastructure errors |
+| `api/inline-http-calls.md` | `HttpClient(` создаётся inline в тесте |
+| `api/missing-security-headers.md` | POS-тест без проверки security headers |
+| `api/missing-business-error-assertion.md` | NEG-тест без проверки `body.code` |
 
-# Grep в артефакте
-grep -r "Thread.sleep" src/test/kotlin/
+### platform/ — Kotlin + JUnit5
 
-# Прочитай соответствующий файл ТОЛЬКО при match
-cat .claude/qa-antipatterns/flaky-sleep-tests.md
-```
+| Файл | Проблема |
+|------|----------|
+| `platform/coroutine-test-return-type.md` | `runBlocking` без явного Unit type |
+| `platform/junit-test-initialization.md` | `@TestInstance(PER_CLASS)` + field init failures |
+| `platform/flaky-sleep-tests.md` | `Thread.sleep()` / `delay()` вместо polling |
+| `platform/no-hardcoded-timeouts.md` | Магические числа в таймаутах |
+| `platform/no-shared-mutable-state.md` | Shared state между тестами |
+| `platform/controlled-retries.md` | Неконтролируемая retry-логика |
+
+### security/ — Данные и безопасность
+
+| Файл | Проблема |
+|------|----------|
+| `security/no-sensitive-data-logging.md` | PII в логах |
+| `security/information-leakage-in-errors.md` | Утечка данных в логах ошибок |
+| `security/pii-combined.md` | PII в тест-данных и коде (api-tests + testcases) |
 
 ## Usage (для SDET)
 
 При обнаружении проблемы в коде:
-1. `ls .claude/qa-antipatterns/` — найди файл по имени проблемы
-2. Прочитай файл → примени Good Example → процитируй `(ref: filename.md)`
+1. Определи категорию: common / api / platform / security
+2. Прочитай `.claude/qa-antipatterns/{category}/{name}.md` → примени Good Example → процитируй `(ref: {category}/{name}.md)`
 3. Если reference не найден → BLOCKER, не угадывай fix
+
+## Usage (для Auditor)
+
+```bash
+# Сканируй по категории
+ls .claude/qa-antipatterns/api/
+
+# Grep в артефакте
+grep -r "HttpClient(\|Map<String, Any>\|body<" src/test/kotlin/
+
+# Прочитай файл при match
+cat .claude/qa-antipatterns/api/inline-http-calls.md
+```

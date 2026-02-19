@@ -38,8 +38,8 @@ GitHub Copilot не читает инструкции автоматически
 | Команда (alias) | Какой файл подключить в контекст | Назначение |
 |-----------------|----------------------------------|------------|
 | Spec Audit      | `.claude/skills/spec-audit/SKILL.md` | QA-аудит спецификации |
-| Тест-кейсы      | `.claude/skills/testcases/SKILL.md` | Мануальные тест-кейсы (Kotlin DSL) |
-| API Тесты       | `.claude/skills/api-tests/SKILL.md` | API автотесты (Ktor + JUnit 5) |
+| Тест-кейсы      | `.claude/skills/test-cases/SKILL.md` | Тест-кейсы из спецификации |
+| API Тесты       | `.claude/skills/api-tests/SKILL.md` | API автотесты (JUnit 5, Allure) |
 | Screenshot      | `.claude/skills/screenshot-analyze/SKILL.md` | L10N и UI дефекты |
 
 **Workflow:** Аудит → Тест-кейсы → API Тесты
@@ -51,7 +51,6 @@ CLAUDE.md                        # Полный контекст проекта 
 .claude/qa_agent.md              # Mindset + Anti-Patterns + Protocols
 .claude/skills/                  # Детальные инструкции по задачам
 specifications/                  # Спецификации API для анализа
-src/test/testCases/              # Мануальные тесты (Kotlin DSL)
 src/test/kotlin/                 # API автотесты
 audit/                           # Результаты аудита требований
 ```
