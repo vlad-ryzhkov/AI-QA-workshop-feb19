@@ -99,7 +99,7 @@ ___
 
 ### Презентация:
 
-presentation/Workshop_ AI + QA.pdf
+[presentation/Workshop_ AI + QA.pdf](presentation/Workshop_%20AI%20+%20QA.pdf)
 
 ---
 
