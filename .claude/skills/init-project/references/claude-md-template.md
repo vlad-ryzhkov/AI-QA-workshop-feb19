@@ -53,15 +53,34 @@
 
 Для задач > 3 файлов: Analysis → Plan → Execute → Verify
 
+<!-- СЕКЦИЯ: Architecture — только для infra/backend-проектов (нет src/test/) -->
+## Architecture
+
+[Нарратив о key design decisions: компоненты, схема взаимодействия, нетривиальные конфигурации]
+
+<!-- СЕКЦИЯ: Key Values — если есть нетривиальные дефолты в values.yaml / application.yml / .env -->
+## Key Values
+
+### [Подсекция по компоненту]
+- `[ключ]` — [что делает, почему важно]
+
+<!-- СЕКЦИЯ: CI/CD Flow — если найдены .github/workflows/, .gitlab-ci.yml, Jenkinsfile -->
+## CI/CD Flow
+
+```
+[pipeline диаграмма: шаг → шаг → шаг]
+```
+
+<!-- СЕКЦИЯ: QA Skills — только если в проекте существует .claude/skills/ -->
 ## QA Skills
 
 | Skill | Назначение |
 |-------|------------|
 | `/spec-audit` | QA-аудит требований |
-| `/testcases` | Ручные тест-кейсы |
+| `/test-cases` | Тест-кейсы из спецификации |
 | `/api-tests` | API автотесты |
 
-**Workflow:** `/spec-audit` → `/testcases` → `/api-tests`
+**Workflow:** `/spec-audit` → `/test-cases` → `/api-tests`
 ```
 
 ---
@@ -98,6 +117,18 @@
 | Validation | zod | manual |
 | Assertions | Jest expect | chai |
 | Framework | Jest / Vitest | Mocha |
+```
+
+### Infrastructure (Helm / Kubernetes / Terraform)
+```
+| Компонент | Технология | BANNED |
+|-----------|------------|--------|
+| Package Manager | Helm 3 | Kustomize, raw kubectl apply |
+| Service Mesh | Istio / Linkerd | — |
+| IaC | Terraform | manual kubectl |
+| Registry | OCI (Harbor) | Docker Hub (prod) |
+| Lint | helm lint . / tflint | — |
+| CI/CD | GitHub Actions / GitLab CI | — |
 ```
 
 ---
