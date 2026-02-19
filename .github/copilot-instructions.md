@@ -1,11 +1,12 @@
 # AI QA Workshop — Copilot Instructions
 
-# INSTRUCTIONS FOR GITHUB COPILOT
+## INSTRUCTIONS FOR GITHUB COPILOT
 
 ALWAYS prioritize the context defined in `CLAUDE.md` and `.claude/qa_agent.md`.
 If the user asks for a specific task (like "analyze" or "test"), **YOU MUST** ask them to open the corresponding SKILL file if it is not already in the context.
 
 ## Context
+
 - **Проект:** Mobile/Backend QA Automation Workshop
 - **Роль:** Senior QA Automation Engineer
 - **Языки:** Kotlin, Markdown
@@ -46,7 +47,7 @@ GitHub Copilot не читает инструкции автоматически
 
 ## Project Structure
 
-```
+```text
 CLAUDE.md                        # Полный контекст проекта (Single Source of Truth)
 .claude/qa_agent.md              # Mindset + Anti-Patterns + Protocols
 .claude/skills/                  # Детальные инструкции по задачам
