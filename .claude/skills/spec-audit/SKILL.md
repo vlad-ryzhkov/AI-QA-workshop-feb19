@@ -107,11 +107,9 @@ context: fork
 
 ## Вывод результатов
 
-**По умолчанию:** сохранить в файл `specifications-audit/{spec_basename}_audit.md` + вывести SKILL COMPLETE в чат.
+**По умолчанию:** сохранить в файл `audit/spec-audit_{YYYY-MM-DD}.md` + вывести SKILL COMPLETE в чат.
 
-**Путь:** определяется из аргумента. Пример: аргумент `specifications/specifications_v1/registration_api_v1.md` → файл `specifications-audit/registration_api_v1_audit.md`.
-
-Если директория `specifications-audit/` не существует — создать.
+При повторном запуске в тот же день — перезаписать.
 
 ## Контракт вывода
 

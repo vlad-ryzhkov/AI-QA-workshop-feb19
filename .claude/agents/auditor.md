@@ -106,7 +106,7 @@
 При активации ЛЮБОГО скилла из `.claude/skills/`:
 1. Прочитай `SYSTEM REQUIREMENTS` секцию скилла
 2. Загрузи `.claude/protocols/gardener.md`
-3. При срабатывании триггера — соблюдай формат `🌱 GARDENER SUGGESTION` из протокола
+3. После завершения скилла, ДО блока `SKILL COMPLETE` — выполни Gardener Analysis (всегда, независимо от результата)
 
 ## Anti-Pattern Detection (Dynamic Loading)
 
@@ -139,9 +139,9 @@
 ```
 
 **Дополнительно:**
-- `/output-review` → + строка в `audit/audit-history.md`
-- `/skill-audit` → + строка в `audit/audit-history.md`
-- `/doc-lint` → `audit/doc-lint-report.md` + строка в `audit/audit-history.md`
+- `/output-review` → `audit/output-review_{skill}_{date}.md`
+- `/skill-audit` → `audit/skill-audit-report.md`
+- `/doc-lint` → `audit/doc-lint-report.md`
 - `/health-check` → Findings в чат
 
 ## Quality Gates
