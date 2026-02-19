@@ -12,9 +12,19 @@ context: fork
 
 **Фокус:** Деньги, Время, Геолокация, RTL + **СЕМАНТИКА ПЕРЕВОДОВ**.
 
-## Перед началом
+## Парсинг аргументов (ОБЯЗАТЕЛЬНО — шаг 0)
 
-Прочитай `.claude/qa_agent.md` и `.claude/agents/l10n-specialist.md`.
+Путь к скриншотам ищи по приоритету — остановись на первом успешном:
+
+**1. Args скилла** — любой текст после имени команды. Примеры:
+- `/screenshot-analyze resources/screenshots/brazil_passenger_main_screen` → `resources/screenshots/brazil_passenger_main_screen`
+- `/screenshot-analyze /abs/path/screens` → `/abs/path/screens`
+
+**2. Glob-поиск (fallback)** — если args не содержат путь, выполни `Glob("**/*.{png,jpg,jpeg,gif,webp}")`, сгруппируй по директориям, возьми директорию с наибольшим количеством изображений.
+
+**3. Спроси пользователя** — только если пп.1-2 не дали результата.
+
+**СТРОГО ЗАПРЕЩЕНО** задавать вопрос о пути, если в пп.1-2 найден путь или файлы.
 
 ---
 

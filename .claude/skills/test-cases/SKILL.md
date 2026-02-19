@@ -1,5 +1,5 @@
 ---
-name: testcases
+name: test-cases
 description: Генерирует ручные тест-кейсы (Kotlin DSL + Allure) с применением BVA, EP и строгим бизнес-контекстом. Запрещает хардкод данных и технические детали в expected. Используй для создания мануальных тестов, покрытия требований тест-кейсами или структурированных ручных проверок. Не используй для автотестов — для этого /api-tests.
 allowed-tools: "Read Write Edit Glob Grep"
 agent: agents/sdet.md
@@ -86,7 +86,7 @@ class FeatureTests {
    - Atomic? (1 тест = 1 сценарий)
 4. **Output:**
    ```
-   ✅ SKILL COMPLETE: /testcases
+   ✅ SKILL COMPLETE: /test-cases
    ├─ Артефакты: src/test/kotlin/manualtests/{feature}/*.kt
    ├─ Тестов: N
    ├─ BVA Coverage: X/Y границ (NN%)

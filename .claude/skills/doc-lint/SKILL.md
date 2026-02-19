@@ -159,7 +159,7 @@ Score = 100 - (2 × 15) - (5 × 5) - (8 × 0.5) = 100 - 30 - 25 - 4 = 41/100
 
 ### Post-Check Scorecard
 
-Формат Post-Check — аналогично `/spec-audit` (см. qa_agent.md § Skill Completion Protocol, agents/auditor.md § Quality Gates).
+Формат Post-Check — аналогично `/spec-audit` (см. qa_agent.md § Skill Completion Protocol, qa_agent.md § Quality Gates).
 
 **Post-Check Scorecard:**
 

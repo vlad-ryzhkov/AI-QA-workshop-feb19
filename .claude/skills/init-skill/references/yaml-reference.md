@@ -10,7 +10,7 @@
   - Без префиксов "claude", "anthropic"
   - Уникально в пределах проекта
 - **Примеры:**
-  - ✅ `test-plan`, `api-tests`, `screenshot-analyze`
+  - ✅ `test-cases`, `api-tests`, `screenshot-analyze`
   - ❌ `TestPlan`, `api_tests`, `claude-helper`
 
 ### description

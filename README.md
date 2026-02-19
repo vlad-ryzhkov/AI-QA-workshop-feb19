@@ -74,3 +74,7 @@ QA-инженерам (Manual & Auto), желающим ускорить еже�
 
 - **[Custom Instructions](https://code.visualstudio.com/docs/copilot/customization/custom-instructions)** — настройка `.github/copilot-instructions.md`
 
+### 🧠 Вайбкодинг
+
+- **[Советы по вайбкодингу](https://www.threads.com/@boris_cherny/post/DTBVlMIkpcm)**
+

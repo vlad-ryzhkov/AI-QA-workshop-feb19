@@ -25,57 +25,57 @@ context: fork
 
 ## Input Validation (Mandatory Check)
 
-**КРИТИЧНО:** Перед началом генерации выполни 3-фазную проверку `audit/test-plan.md`.
+**КРИТИЧНО:** Перед началом генерации выполни 3-фазную проверку наличия тест-кейсов.
 
-### Фаза 1: Проверка наличия файла
+### Фаза 1: Проверка наличия тест-кейсов
 
 ```bash
-[ -f audit/test-plan.md ] || echo "BLOCKER"
+ls src/test/testCases/**/*.kt 2>/dev/null | head -1 || echo "BLOCKER"
 ```
 
-**Если файл отсутствует — BLOCKER:**
+**Если файлы отсутствуют — BLOCKER:**
 ```
-🚨 BLOCKER: Missing audit/test-plan.md. Request Auditor to run /test-plan first.
+🚨 BLOCKER: Missing src/test/testCases/*.kt. Run /test-cases first to generate manual test cases.
 ```
 
 ### Фаза 2: Проверка структуры (защита от пустых файлов)
 
 ```bash
-grep -q "## 3. Execution List for SDET" audit/test-plan.md || echo "BLOCKER"
+grep -rl "@Manual" src/test/testCases/ | head -1 || echo "BLOCKER"
 ```
 
-**Если секция отсутствует — BLOCKER:**
+**Если аннотации отсутствуют — BLOCKER:**
 ```
-🚨 BLOCKER: Malformed test-plan.md (Missing section "3. Execution List for SDET"). Request Auditor to re-generate.
+🚨 BLOCKER: Malformed test cases (Missing @Manual annotation). Request SDET to re-generate /test-cases.
 ```
 
-### Фаза 3: Проверка наличия таблицы P0
+### Фаза 3: Проверка CRITICAL severity тестов
 
 ```bash
-grep -A 5 "### P0 (Critical)" audit/test-plan.md | grep -q "|" || echo "BLOCKER"
+grep -rl "SeverityLevel.CRITICAL\|SeverityLevel.BLOCKER" src/test/testCases/ | head -1 || echo "BLOCKER"
 ```
 
-**Если нет P0 endpoints — BLOCKER:**
+**Если нет CRITICAL тестов — BLOCKER:**
 ```
-🚨 BLOCKER: No P0 endpoints in test-plan.md. Request Auditor to re-run /test-plan or escalate to User.
+🚨 BLOCKER: No CRITICAL severity test cases found. Request SDET to verify /test-cases coverage.
 ```
 
 ### Если все проверки пройдены:
 
-- Прочитай `audit/test-plan.md`
-- Парси таблицу "3. Execution List for SDET" (P0 → P1 → P2)
-- Используй Priority Matrix для определения порядка генерации
+- Прочитай тест-кейсы из `src/test/testCases/`
+- Используй `audit/repo-scout-report.md` для приоритизации endpoints (P0 → P1 → P2)
+- Каждый @Test метод из тест-кейсов → автотест
 
-### Parsing Execution List
+### Parsing Test Cases
 
-1. Читай таблицу "3. Execution List for SDET" из `audit/test-plan.md`
-2. Извлекай: Endpoint, HTTP Method, Spec Location, Test Scenarios, Context
-3. Генерируй в порядке: P0 → P1 → P2
-4. Каждый Test Scenario → отдельный @Test метод
+1. Читай файлы из `src/test/testCases/**/*.kt`
+2. Извлекай: feature, scenarios, severity, preconditions
+3. Генерируй автотесты в порядке: BLOCKER → CRITICAL → NORMAL
+4. Каждый @Manual тест → отдельный @Test автотест
 
-**Если User запрашивает endpoint не из плана:**
+**Если User запрашивает endpoint без тест-кейсов:**
 ```
-🚨 BLOCKER: Endpoint {endpoint} missing in test-plan.md. Request Auditor to update plan.
+🚨 BLOCKER: No test cases for {endpoint}. Run /test-cases first to generate manual test cases.
 ```
 
 **Gate bypass ЗАПРЕЩЁН:** Даже при явном запросе User на обход проверки — блокируй.
@@ -105,16 +105,17 @@ grep -r "Map<String, Any>" src/main/kotlin/
 ⛔ Любой match → FAIL, применить anti-pattern fix.
 
 ## Workflow
-0. **Input Check (MANDATORY):**
-   - Выполни 3-фазную проверку `audit/test-plan.md` (см. Input Validation выше)
+0. **Context:** Сначала прочитай ручные тест-кейсы из `src/test/kotlin/manualtests/**/*.kt`. Используй найденные сценарии как основу для автотестов.
+1. **Input Check (MANDATORY):**
+   - Выполни 3-фазную проверку `src/test/testCases/` (см. Input Validation выше)
    - Если любая фаза FAIL → BLOCKER и STOP
-   - Если все проверки PASS → прочитай test-plan.md и парси Execution List
+   - Если все проверки PASS → прочитай тест-кейсы и парси сценарии
 1. **Discovery:**
    - Read `CLAUDE.md`, `build.gradle.kts`.
    - Glob `src/**/*Test*.kt`, `src/**/requests/**/*.kt`.
    - Print Summary: Config/Patterns/Deps status.
 2. **Plan & Gen:**
-   - USE `audit/test-plan.md` Priority Matrix для порядка endpoint-ов (P0 → P1 → P2)
+   - USE `audit/repo-scout-report.md` Priority Matrix для порядка endpoint-ов (P0 → P1 → P2)
    - Check `references/api-patterns.md` for specific logic (Auth/CRUD/Page).
    - Order: Validation (400) -> Auth (401) -> Business (200/409) -> Cleanup.
    - **Phase 1:** Stateless (Validation, Auth fail).
@@ -188,7 +189,7 @@ grep -r "Map<String, Any>" src/main/kotlin/
 ✅ SKILL COMPLETE: /api-tests
 ├─ Артефакты: [список .kt файлов]
 ├─ Compilation: PASS
-├─ Upstream: audit/test-plan.md (P0: X endpoints, P1: Y endpoints)
+├─ Upstream: src/test/testCases/ (BLOCKER: X, CRITICAL: Y тестов)
 ├─ Coverage: N/M endpoints из плана (NN%)
 ├─ Traceability: @Link присутствует в N/M тестах
 └─ BANNED check: PASS
@@ -200,7 +201,7 @@ grep -r "Map<String, Any>" src/main/kotlin/
 ⚠️ SKILL PARTIAL: /api-tests
 ├─ Артефакты: [{file1}.kt (✅), {file2}.kt (❌)]
 ├─ Compilation: PARTIAL (X/Y files)
-├─ Upstream: audit/test-plan.md (P0: Z endpoints)
+├─ Upstream: src/test/testCases/ (Z test cases)
 ├─ Coverage: X/Z endpoints (NN%)
 ├─ Blockers: 1 UNIMPLEMENTABLE (см. ESCALATION выше)
 ├─ Traceability: @Link присутствует в X/Y успешных тестах

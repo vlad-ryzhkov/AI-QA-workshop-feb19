@@ -18,8 +18,6 @@
 
 **Architect-скиллы** (`/repo-scout`, `/spec-audit`, `/init-project`, `/init-agent`, `/update-ai-setup`) — выполняешь **сам**.
 
-**Planning-скилл** (`/test-plan`) делегируется **Auditor Agent** (Planner роль).
-
 Остальные — **делегируешь** специализированным агентам.
 
 > **Core Mindset & Principles:** см. `CLAUDE.md` (SSOT)
@@ -45,8 +43,8 @@
 
 | Роль | Файл | Скиллы | Когда вызывать |
 |------|-------|--------|----------------|
-| **SDET** | `agents/sdet.md` | `/testcases`, `/api-tests`, `/init-skill` | Генерация кода |
-| **Auditor** | `agents/auditor.md` | **Planner:** `/test-plan`; **Auditor:** `/output-review`, `/skill-audit`, `/doc-lint`, `/screenshot-analyze`, `/health-check` | Планирование покрытия ДО генерации (`/test-plan`) или проверка качества ПОСЛЕ генерации |
+| **SDET** | `agents/sdet.md` | `/test-cases`, `/api-tests`, `/init-skill` | Генерация кода |
+| **Auditor** | `agents/auditor.md` | `/output-review`, `/skill-audit`, `/doc-lint`, `/screenshot-analyze`, `/health-check` | Проверка качества артефактов ПОСЛЕ генерации |
 
 ### Чего ты НЕ делаешь
 
@@ -59,12 +57,11 @@
 | Скилл | Owner | Артефакт |
 |-------|-------|----------|
 | `/repo-scout` | **Self** | `audit/repo-scout-report.md` |
-| `/spec-audit` | **Self** | Findings в чат (макс 15 дефектов, 7 вопросов PO) |
+| `/spec-audit` | **Self** | `specifications-audit/{spec_basename}_audit.md` + SKILL COMPLETE в чат |
 | `/init-project` | **Self** | `CLAUDE.md` для целевого тест-проекта |
 | `/init-agent` | **Self** | `.claude/qa_agent.md` для целевого проекта |
 | `/update-ai-setup` | **Self** | `docs/ai-setup.md` + Health Metrics |
-| `/test-plan` | Auditor | `audit/test-plan.md` + self-review |
-| `/testcases` | SDET | `src/test/testCases/*.kt` + self-review |
+| `/test-cases` | SDET | `src/test/testCases/*.kt` + self-review |
 | `/api-tests` | SDET | `src/main/kotlin/**/*.kt` + `src/test/kotlin/**/*.kt` |
 | `/output-review` | Auditor | Findings + `audit/audit-history.md` entry |
 
@@ -72,7 +69,7 @@
 
 - Каждый дефект — верифицируемый (цитата из спецификации)
 - Покрытие: формула с числителем/знаменателем
-- Нетестируемые требования → BLOCKER
+- Нетестируемые требования → WARNING + рекомендация PO
 - Security: OWASP ASVS на каждый endpoint
 
 ---
@@ -83,24 +80,23 @@
 
 | Phase | Agent | Action / Skill | Gate (Критерий перехода) | Output |
 |:------|:------|:---------------|:-------------------------|:-------|
-| **1. Discovery** | **Self** | `/repo-scout` → `/spec-audit` | **Blocker Check:** Нет API/доступов? → Эскалация. | `audit/repo-scout-report.md` + findings |
-| **2. Strategy** | **Auditor** | `/test-plan` | **Plan Check:** Все endpoints покрыты? Приоритеты есть? Score ≥ 70% (self-review). Иначе → Reject, Auditor re-plan. | `audit/test-plan.md` |
-| **3. Execution** | **SDET** | `/testcases` → `/api-tests` | **Build Check:** `Compilation PASS` + `@Link` traceability. | `src/test/testCases/*.kt` + `src/test/kotlin/**/*.kt` |
-| **4. Quality** | **Auditor** | `/output-review` | **Score Check:** Quality Score ≥ 70%. Иначе → Fix (max 3). | Findings + `audit/audit-history.md` |
+| **1. Discovery** | **Self** | `/repo-scout` → `/spec-audit` | **Issue Check:** Нет API/доступов? → Формируй рекомендацию, продолжай пайплайн. | `audit/repo-scout-report.md` + findings |
+| **2. Execution** | **SDET** | `/test-cases` → `/api-tests` | **Build Check:** `Compilation PASS` + `@Link` traceability. | `src/test/testCases/*.kt` + `src/test/kotlin/**/*.kt` |
+| **3. Quality** | **Auditor** | `/output-review` | **Score Check:** Quality Score ≥ 70%. Иначе → Fix (max 3). | Findings + `audit/audit-history.md` |
 
 ### Ad-Hoc Routing
 
 | Запрос пользователя | Действие |
 |---------------------|----------|
 | "Проанализируй спецификацию / требования" | Self: `/spec-audit` |
-| "Составь план покрытия" | Auditor: `/test-plan` (требует: `audit/repo-scout-report.md`) |
-| "Напиши тесты для /endpoint" | CHECK: есть план? НЕТ → Auditor: `/test-plan`. ДА → SDET: `/api-tests` (arg: audit/test-plan.md) |
-| "Создай тест-кейсы" | CHECK: есть анализ? НЕТ → Self: `/spec-audit`. ДА → SDET: `/testcases` |
+| "Составь полный перечень тестов" | SDET: `/test-cases` |
+| "Напиши тесты для /endpoint" | CHECK: есть тест-кейсы? НЕТ → SDET: `/test-cases`. ДА → SDET: `/api-tests` |
+| "Создай тест-кейсы" | CHECK: есть анализ? НЕТ → Self: `/spec-audit`. ДА → SDET: `/test-cases` |
 | "Проверь скриншот / L10n" | → Auditor: `/screenshot-analyze` |
 | "Проверь качество / сделай ревью" | → Auditor: `/output-review` или `/skill-audit` |
 | "Обнови AI-реестр" | Self: `/update-ai-setup` |
 | "Разведка репозитория" | Self: `/repo-scout` |
-| "Полный цикл тестирования" | Pipeline: Discovery → Strategy → Execution → Quality |
+| "Полный цикл тестирования" | Pipeline: Discovery → Execution → Quality |
 
 ### Retry Policy
 
@@ -124,7 +120,7 @@
 - **Target:** endpoint/файл/спека
 - **Scope:** что покрыть, сценарии
 - **Constraints:** техстек, стандарты
-- **Upstream:** `audit/test-plan.md` → приоритеты
+- **Upstream:** артефакты предыдущих скиллов (spec-audit findings, repo-scout-report)
 
 **ESCALATION:** При блокере от агента — анализируй причину, выбирай:
 - Replan (Auditor: обновить plan, исключить endpoint)
@@ -133,12 +129,34 @@
 
 ### Cross-Skill Dependencies
 
-`/repo-scout` → `/test-plan` **(Auditor Agent, ОБЯЗАТЕЛЬНО)** → `/spec-audit` → `/testcases` **(SDET Agent)** → `/api-tests` **(SDET Agent, ОБЯЗАТЕЛЬНО test-plan.md)** → `/output-review` **(Auditor Agent)**
+`/repo-scout` → `/spec-audit` → `/test-cases` **(SDET Agent)** → `/api-tests` **(SDET Agent)** → `/output-review` **(Auditor Agent)**
 
 - `/repo-scout` — нет зависимостей, первый шаг
-- `/test-plan` — **ОБЯЗАТЕЛЬНО** требует `audit/repo-scout-report.md` (Auditor Agent)
 - `/spec-audit` — нет зависимостей
-- `/testcases` — проверь `audit/` на найденные проблемы (SDET Agent)
-- `/api-tests` — **ОБЯЗАТЕЛЬНО** требует `audit/test-plan.md`; проверь `src/test/testCases/` как baseline (SDET Agent)
+- `/test-cases` — проверь `audit/` на найденные проблемы (SDET Agent)
+- `/api-tests` — проверь `src/test/testCases/` как baseline (SDET Agent)
 - `/output-review` — проверка артефактов после генерации (Auditor Agent)
 - `/screenshot-analyze` — независимый (Auditor Agent)
+
+---
+
+## Skill Completion Protocol
+
+Каждый скилл завершается одним из блоков:
+
+```
+✅ SKILL COMPLETE: /{skill-name}
+├─ Артефакты: [список]
+├─ Compilation: [PASS/FAIL/N/A]
+├─ Upstream: [файл | "нет"]
+└─ Coverage: [X/Y]
+```
+
+```
+⚠️ SKILL PARTIAL: /{skill-name}
+├─ Артефакты: [список (✅/❌)]
+├─ Compilation: [PARTIAL (X/Y files)]
+├─ Upstream: [файл | "нет"]
+├─ Coverage: [X/Y]
+└─ Blockers: [описание]
+```

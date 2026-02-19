@@ -15,7 +15,7 @@ allowed-tools: "Read Glob Grep Bash(ls*) Bash(wc*)"
 ## Когда использовать
 
 - Первый вход в новый бэкенд-репозиторий
-- Перед `/test-plan` — для сбора данных
+- Перед `/test-cases` — для сбора данных
 - Перед `/init-project` — для понимания целевого сервиса
 - Периодический аудит: "что изменилось в API surface?"
 
@@ -266,5 +266,5 @@ Self-Review для этого скилла **не генерируется** (re
 ## Связанные файлы
 
 - Паттерны Go: `references/lang-patterns.md`
-- Следующий шаг: `/test-plan` (использует repo-scout-report.md как вход)
+- Следующий шаг: `/test-cases` (использует repo-scout-report.md как вход)
 - AI-файлы: `/init-project` → CLAUDE.md, `/init-agent` → qa_agent.md

@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L10n Report — Brazil</title>
+    <style>
+        :root {
+            --pass: #22c55e; --fail: #ef4444; --warn: #f59e0b;
+            --info: #3b82f6; --crit: #dc2626; --bg: #f8fafc;
+            --card: #fff; --border: #e2e8f0; --text: #1e293b; --muted: #64748b;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; padding: 1.5rem; }
+        .container { max-width: 1400px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid var(--border); }
+        h1 { font-size: 1.5rem; margin-bottom: 0.25rem; }
+        .sub { color: var(--muted); font-size: 0.85rem; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.75rem; margin-bottom: 1.5rem; }
+        .card { background: var(--card); border-radius: 8px; padding: 0.75rem; border: 1px solid var(--border); text-align: center; }
+        .card .v { font-size: 1.5rem; font-weight: 700; display: block; }
+        .card .l { color: var(--muted); font-size: 0.75rem; display: block; }
+        .card.crit .v { color: var(--crit); }
+        .card.fail .v { color: var(--fail); }
+        .card.warn .v { color: var(--warn); }
+        .banner { background: #dbeafe; border: 1px solid #93c5fd; border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 1.5rem; font-size: 0.85rem; color: #1e40af; }
+        .section { background: var(--card); border-radius: 10px; border: 1px solid var(--border); margin-bottom: 1.5rem; overflow: hidden; }
+        .section-hdr { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: #f1f5f9; border-bottom: 1px solid var(--border); font-weight: 600; }
+        .tag { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 600; background: #e2e8f0; }
+        .tag.sem { background: #fef3c7; color: #92400e; }
+        .tag.l10n { background: #dcfce7; color: #166534; }
+        .tag.cur { background: #fce7f3; color: #be185d; }
+        .tag.ui { background: #f3e8ff; color: #7c3aed; }
+        .tag.rtl { background: #ffedd5; color: #c2410c; }
+        .tag.ux { background: #dbeafe; color: #1e40af; }
+        .tag.cons { background: #e0e7ff; color: #4338ca; }
+        .sev { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; }
+        .sev.crit { background: #fee2e2; color: #dc2626; }
+        .sev.err { background: #fecaca; color: #b91c1c; }
+        .sev.warn { background: #fef3c7; color: #b45309; }
+        .sev.info { background: #dbeafe; color: #1d4ed8; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        th, td { padding: 0.5rem 0.75rem; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
+        th { background: #f8fafc; font-weight: 600; }
+        .screenshot-wrap { display: flex; justify-content: center; padding: 1rem; background: #f1f5f9; border-bottom: 1px solid var(--border); }
+        .screenshot { max-height: 600px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+        .verdict { padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
+        .verdict.pass { background: #dcfce7; color: #166534; }
+        .verdict.fail { background: #fee2e2; color: #991b1b; }
+        .verdict.warn { background: #fef3c7; color: #92400e; }
+        .cross-table { margin-bottom: 1.5rem; }
+        h2 { font-size: 1.1rem; margin-bottom: 0.75rem; padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
+        .no-issues { padding: 1rem; color: var(--muted); font-style: italic; }
+        code { font-family: monospace; font-size: 0.85em; background: #f1f5f9; padding: 0.1rem 0.3rem; border-radius: 3px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>L10n Report — Brazil</h1>
+        <p class="sub">Region: BR (BRL) | Локали: en-BR, ru-BR, ar-BR | 2026-02-19</p>
+    </header>
+
+    <div class="grid">
+        <div class="card crit"><span class="v">3</span><span class="l">КРИТИЧНО</span></div>
+        <div class="card fail"><span class="v">4</span><span class="l">ОШИБКИ</span></div>
+        <div class="card warn"><span class="v">2</span><span class="l">ВНИМАНИЕ</span></div>
+        <div class="card"><span class="v">1</span><span class="l">ИНФО</span></div>
+    </div>
+
+    <div class="banner">
+        ℹ️ Region: Brazil (BR) | Currency: R$ (BRL) | Формат числа: R$&nbsp;1.234,56 | Пространство между R$ и числом обязательно по CLDR
+    </div>
+
+    <!-- ── Cross-Screenshot Comparison ── -->
+    <div class="cross-table">
+        <h2>Сравнительная таблица (Cross-Locale)</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Элемент</th>
+                    <th>EN (reference)</th>
+                    <th>RU</th>
+                    <th>AR</th>
+                    <th>Проблема</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Tariff: Economic</td>
+                    <td>Economic ✅</td>
+                    <td>Эконом ✅</td>
+                    <td>علم الاقتصاد ❌</td>
+                    <td>AR: «علم الاقتصاد» = «Наука экономика» — Wrong Context / Literal Translation</td>
+                </tr>
+                <tr>
+                    <td>Tariff: Comfy</td>
+                    <td>Comfy ✅</td>
+                    <td>Комфорт ✅</td>
+                    <td>مريح ✅</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td>Tariff: Moto</td>
+                    <td>Moto ✅</td>
+                    <td>Мотоцикл ⚠️</td>
+                    <td>دراجة نارية ✅</td>
+                    <td>RU: «Мотоцикл» — название тарифа не должно переводиться, это бренд-термин приложения</td>
+                </tr>
+                <tr>
+                    <td>Destination label</td>
+                    <td>Harlem Kettlebell Club ✅</td>
+                    <td>Harlem Kettlebell Club ✅</td>
+                    <td>نادي جرس الغلاية ❌</td>
+                    <td>AR: Название POI переведено («نادي جرس الغلاية» = «Клуб колокол чайника»). POI с карт не переводятся</td>
+                </tr>
+                <tr>
+                    <td>CTA Button</td>
+                    <td>Search proposals ✅</td>
+                    <td>Ищу водителей ✅</td>
+                    <td>البحث عن سائق ✅</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td>Price label</td>
+                    <td>Propose your cost ✅</td>
+                    <td>Назначьте свою плату ✅</td>
+                    <td>قدم فارأ ❌</td>
+                    <td>AR: «قدم فارأ» — бессмысленный текст / возможная ошибка транслитерации, не является корректным арабским</td>
+                </tr>
+                <tr>
+                    <td>Auto-confirm label</td>
+                    <td>Auto-confirm bid R$13 ✅</td>
+                    <td>Авто-принятие ставки за BRL$13 ❌</td>
+                    <td>السيارة تقبل عرض R$١٣ ⚠️</td>
+                    <td>RU: валюта отображена как «BRL$13» вместо «R$13»; AR: смешанный LTR символ R$ в RTL строке без правильного порядка</td>
+                </tr>
+                <tr>
+                    <td>ETA (map badge)</td>
+                    <td>2–6 min ✅</td>
+                    <td>2–6 min ✅</td>
+                    <td>٦-٢ رجل ❌</td>
+                    <td>AR: «رجل» = «человек/мужчина» вместо «دقيقة» (минута). КРИТИЧЕСКАЯ семантическая ошибка. Также цифры: «٦-٢» — порядок перевёрнут RTL</td>
+                </tr>
+                <tr>
+                    <td>Entry point label</td>
+                    <td>Entryway ✅</td>
+                    <td>Вход ✅</td>
+                    <td>قم ⚠️</td>
+                    <td>AR: «قم» = «встань» (повелительное наклонение) — Wrong Context, должно быть «مدخل» (вход/подъезд)</td>
+                </tr>
+                <tr>
+                    <td>RTL Layout</td>
+                    <td>LTR ✅</td>
+                    <td>LTR ✅</td>
+                    <td>Частично RTL ❌</td>
+                    <td>AR: кнопка «Back» (←) остаётся слева — должна быть справа (→) для RTL. Нижний тулбар не отзеркален</td>
+                </tr>
+                <tr>
+                    <td>Currency format R$</td>
+                    <td>R$13 / ~R$16 / ~R11.0 ⚠️</td>
+                    <td>R$13 / ~R$16 / ~R$11 ⚠️</td>
+                    <td>R$13 / ~R$16 / ~R$11 ⚠️</td>
+                    <td>Все локали: CLDR pt-BR требует пробел «R$ 13», а не «R$13». Также «~R11.0» в EN — пропущен символ $</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ── Screenshot: en_BR ── -->
+    <div class="section">
+        <div class="section-hdr">
+            <span>en_BR.png (en-BR — Reference)</span>
+            <span class="verdict warn">ВНИМАНИЕ</span>
+        </div>
+        <div class="screenshot-wrap">
+            <img class="screenshot" src="en_BR.png" alt="en_BR.png">
+        </div>
+        <table>
+            <thead><tr><th>#</th><th>Категория</th><th>Severity</th><th>Элемент</th><th>Описание</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><span class="tag cur">CURRENCY</span></td>
+                    <td><span class="sev warn">ВНИМАНИЕ</span></td>
+                    <td>Moto price (list item)</td>
+                    <td>Отображается <code>~R11.0</code> — пропущен символ <code>$</code>, должно быть <code>~R$11,00</code>. Также CLDR pt-BR: десятичный разделитель — запятая, не точка.</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><span class="tag cur">CURRENCY</span></td>
+                    <td><span class="sev warn">ВНИМАНИЕ</span></td>
+                    <td>Все цены (Economic, Comfy, Auto-confirm)</td>
+                    <td>CLDR pt-BR требует пробел между символом и числом: <code>R$ 13</code>, а не <code>R$13</code>. Проблема воспроизводится во всех трёх локалях.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ── Screenshot: ru_BR ── -->
+    <div class="section">
+        <div class="section-hdr">
+            <span>ru_BR.png (ru-BR)</span>
+            <span class="verdict fail">ОШИБКИ</span>
+        </div>
+        <div class="screenshot-wrap">
+            <img class="screenshot" src="ru_BR.png" alt="ru_BR.png">
+        </div>
+        <table>
+            <thead><tr><th>#</th><th>Категория</th><th>Severity</th><th>Элемент</th><th>Описание</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><span class="tag cur">CURRENCY</span></td>
+                    <td><span class="sev err">ОШИБКА</span></td>
+                    <td>Auto-confirm label (нижняя панель)</td>
+                    <td>Отображается <code>BRL$13</code> вместо <code>R$13</code>. Символ валюты для Бразилии — <code>R$</code>; <code>BRL$</code> — несуществующий составной символ. Регион BR → валюта всегда <code>R$</code> независимо от языка UI.</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><span class="tag sem">Семантика</span></td>
+                    <td><span class="sev warn">ВНИМАНИЕ</span></td>
+                    <td>Tariff name: Мотоцикл (список тарифов)</td>
+                    <td>«Moto» — бренд-термин тарифа приложения inDrive (как «Comfy», «Economic»). Переводить не следует: должно оставаться <code>Moto</code>, а не <code>Мотоцикл</code>.</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td><span class="tag l10n">L10N</span></td>
+                    <td><span class="sev info">ИНФО</span></td>
+                    <td>ETA badge (карта) + time в тарифах</td>
+                    <td>ETA на карте показан как <code>2–6 min</code> (EN), а время в карточке тарифа — <code>3 min</code> (EN). В ru-BR интерфейсе единица времени не локализована — должно быть <code>мин</code>.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ── Screenshot: ar_BR ── -->
+    <div class="section">
+        <div class="section-hdr">
+            <span>ar_BR.png (ar-BR)</span>
+            <span class="verdict fail">КРИТИЧЕСКИЕ ОШИБКИ</span>
+        </div>
+        <div class="screenshot-wrap">
+            <img class="screenshot" src="ar_BR.png" alt="ar_BR.png">
+        </div>
+        <table>
+            <thead><tr><th>#</th><th>Категория</th><th>Severity</th><th>Элемент</th><th>Описание</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td><span class="tag sem">Семантика</span></td>
+                    <td><span class="sev crit">КРИТИЧНО</span></td>
+                    <td>ETA badge (карта): <code>٦-٢ رجل</code></td>
+                    <td><strong>«رجل» = «мужчина / человек»</strong> — критическая смысловая ошибка. Должно быть «دقيقة» (минута). Пользователь видит «6–2 мужчины» вместо «2–6 минут». Также порядок диапазона перевёрнут (٦-٢ вместо ٢-٦ мин при правильном написании).</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td><span class="tag sem">Семантика</span></td>
+                    <td><span class="sev crit">КРИТИЧНО</span></td>
+                    <td>Tariff name: <code>علم الاقتصاد</code></td>
+                    <td><strong>«علم الاقتصاد» = «Наука экономика» / «Экономическая наука»</strong> — Wrong Context + Literal Translation. Тариф «Economic» должен переводиться как «اقتصادي» (экономичный/бюджетный). Текущий перевод меняет смысл с тарифа на академическую дисциплину.</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td><span class="tag sem">Семантика</span></td>
+                    <td><span class="sev crit">КРИТИЧНО</span></td>
+                    <td>Destination: <code>نادي جرس الغلاية</code></td>
+                    <td><strong>POI-название переведено</strong>: «Harlem Kettlebell Club» → «نادي جرس الغلاية» = «Клуб колокол чайника». Названия мест с карт не переводятся — это нарушение правила Non-Translatable. Пользователь не сможет идентифицировать место назначения.</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td><span class="tag sem">Семантика</span></td>
+                    <td><span class="sev err">ОШИБКА</span></td>
+                    <td>Price label: <code>قدم فارأ</code></td>
+                    <td><strong>Бессмысленный текст</strong>: «قدم فارأ» не является корректной арабской фразой. EN оригинал: «Propose your cost». Вероятно — ошибка транслитерации или сломанная строка перевода. Должно быть: «اقترح سعرك» или «حدد تكلفتك».</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td><span class="tag sem">Семантика</span></td>
+                    <td><span class="sev err">ОШИБКА</span></td>
+                    <td>Entry point: <code>قم</code></td>
+                    <td><strong>«قم» = «встань» (повелительное наклонение)</strong> — Wrong Context. EN: «Entryway». Должно быть «مدخل» (подъезд/вход). Текущий перевод семантически неверен и вводит пользователя в заблуждение.</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td><span class="tag rtl">RTL</span></td>
+                    <td><span class="sev err">ОШИБКА</span></td>
+                    <td>Back Button (карта, слева)</td>
+                    <td>Кнопка «←» (назад) расположена слева и стрелка направлена влево. В RTL-локали кнопка «назад» должна быть справа со стрелкой вправо (→). Нижняя панель инструментов также не отзеркалена.</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td><span class="tag cur">CURRENCY</span></td>
+                    <td><span class="sev err">ОШИБКА</span></td>
+                    <td>Auto-confirm label: <code>R$١٣</code></td>
+                    <td>RTL Price Concatenation: строка «السيارة تقبل عرض R$١٣» смешивает RTL-текст с LTR-символом валюты R$ без правильного Unicode bidi-изолирования. Число отображается с восточно-арабскими цифрами (١٣), символ R$ — латиница. Требует <code>&#x202b;</code> или <code>dir=ltr</code> для обёртки цены.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ── Master Issues Table ── -->
+    <div class="section">
+        <div class="section-hdr">
+            <span>Сводная таблица всех проблем (Top-10 по severity)</span>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Файл</th>
+                    <th>Локаль</th>
+                    <th>Категория</th>
+                    <th>Severity</th>
+                    <th>Описание проблемы</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>ar_BR.png</td>
+                    <td>ar-BR</td>
+                    <td><span class="tag sem">Семантика</span></td>
+                    <td><span class="sev crit">КРИТИЧНО</span></td>
+                    <td>ETA badge: <code>رجل</code> = «мужчина» вместо «дқиقة» (минута). Пользователь видит «6–2 мужчины»</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>ar_BR.png</td>
+                    <td>ar-BR</td>
+                    <td><span class="tag sem">Семантика</span></td>
+                    <td><span class="sev crit">КРИТИЧНО</span></td>
+                    <td>Тариф: <code>علم الاقتصاد</code> = «Наука экономика» вместо «اقتصادي» (бюджетный тариф)</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>ar_BR.png</td>
+                    <td>ar-BR</td>
+                    <td><span class="tag sem">Семантика</span></td>
+                    <td><span class="sev crit">КРИТИЧНО</span></td>
+                    <td>POI переведён: «Harlem Kettlebell Club» → «نادي جرس الغلاية» = «Клуб колокол чайника» — не идентифицируем</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>ar_BR.png</td>
+                    <td>ar-BR</td>
+                    <td><span class="tag sem">Семантика</span></td>
+                    <td><span class="sev err">ОШИБКА</span></td>
+                    <td>Price label: <code>قدم فارأ</code> — бессмысленный текст, сломан перевод «Propose your cost»</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>ar_BR.png</td>
+                    <td>ar-BR</td>
+                    <td><span class="tag sem">Семантика</span></td>
+                    <td><span class="sev err">ОШИБКА</span></td>
+                    <td>Entry point: <code>قم</code> = «встань» (повелит. накл.) вместо «مدخل» (подъезд/вход)</td>
+                </tr>
+                <tr>
+                    <td>6</td>
+                    <td>ar_BR.png</td>
+                    <td>ar-BR</td>
+                    <td><span class="tag rtl">RTL</span></td>
+                    <td><span class="sev err">ОШИБКА</span></td>
+                    <td>Back Button слева (←): в RTL должен быть справа (→). Нижняя панель не отзеркалена</td>
+                </tr>
+                <tr>
+                    <td>7</td>
+                    <td>ar_BR.png</td>
+                    <td>ar-BR</td>
+                    <td><span class="tag cur">CURRENCY</span></td>
+                    <td><span class="sev err">ОШИБКА</span></td>
+                    <td>RTL Price Concatenation: <code>R$١٣</code> в RTL строке без bidi-изолирования</td>
+                </tr>
+                <tr>
+                    <td>8</td>
+                    <td>ru_BR.png</td>
+                    <td>ru-BR</td>
+                    <td><span class="tag cur">CURRENCY</span></td>
+                    <td><span class="sev err">ОШИБКА</span></td>
+                    <td>Auto-confirm: <code>BRL$13</code> — несуществующий символ валюты; должно быть <code>R$13</code></td>
+                </tr>
+                <tr>
+                    <td>9</td>
+                    <td>ru_BR.png</td>
+                    <td>ru-BR</td>
+                    <td><span class="tag sem">Семантика</span></td>
+                    <td><span class="sev warn">ВНИМАНИЕ</span></td>
+                    <td>Тариф «Moto» → «Мотоцикл»: бренд-термин тарифа inDrive не должен переводиться</td>
+                </tr>
+                <tr>
+                    <td>10</td>
+                    <td>en_BR.png, ru_BR.png, ar_BR.png</td>
+                    <td>все</td>
+                    <td><span class="tag cur">CURRENCY</span></td>
+                    <td><span class="sev warn">ВНИМАНИЕ</span></td>
+                    <td>CLDR pt-BR: пробел между символом и суммой обязателен (<code>R$ 13</code> vs <code>R$13</code>). EN также: <code>~R11.0</code> пропущен <code>$</code></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+</body>
+</html>
