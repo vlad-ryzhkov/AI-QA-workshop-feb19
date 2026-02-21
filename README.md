@@ -135,6 +135,7 @@
 
 ## 📄 Материалы воркшопа
 
+- 📺 [Demo Video](https://youtu.be/7VnjM44qkmc) — Live session: AI-Driven QA with Claude
 - 📊 [Презентация (PDF)](presentation/Workshop_%20AI%20+%20QA.pdf)
 - 📖 [Промпты для воркшопа по шагам и IDE](docs/workshop-commands.md)
 
