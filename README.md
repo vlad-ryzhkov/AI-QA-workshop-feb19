@@ -1,5 +1,8 @@
 # AI for QA — Воркшоп
 
+> [!NOTE]
+> Контекст развивается в английской версии репозитория: [English version of this repository](https://github.com/vlad-ryzhkov/ai-context-engineering-for-qa)
+
 🎤 Представлено на "Podlodka AI Crew #2" в феврале 2026 — [видео](https://youtu.be/7VnjM44qkmc) / [слайды](presentation/Workshop_%20AI%20+%20QA.pdf)
 
 Готовая коллекция AI-промптов, агентов и анти-паттернов для QA-процессов: от анализа спецификаций до генерации API-тестов.
@@ -171,7 +174,3 @@
 ### 🧠 Вайбкодинг
 
 - [Советы по вайбкодингу](https://www.threads.com/@boris_cherny/post/DTBVlMIkpcm)
-
-### 🌐 English version
-
-- [English version of this repository](https://github.com/vlad-ryzhkov/ai-context-engineering-for-qa)
